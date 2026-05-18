@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 5關大闖關 V2.2 - 獨立畫面煙火版！</title>
+    <title>Flexbox 5關大闖關 V2.3 - 完美優化版！</title>
     <style>
         /* --- 基礎版面與配色 --- */
         :root {
@@ -210,21 +210,21 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- 🎉 [全新獨立畫面] 通關祝賀佈局樣式 --- */
+        /* --- 🎉 通關祝賀佈局樣式 --- */
         .ending-view {
             width: 100vw;
             height: 100vh;
-            background-color: #0b0f19; /* 極致深藍太空底色 */
+            background-color: #0b0f19; 
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #fbbf24;
             text-align: center;
-            position: fixed; /* 強制覆蓋全螢幕 */
+            position: fixed; 
             top: 0; left: 0;
             z-index: 9999;
-            overflow: hidden; /* 徹底杜絕任何滾動條 */
+            overflow: hidden; 
         }
         .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
         .ending-view p { font-size: 1.6em; color: #ffffff; margin: 20px 0 40px 0; opacity: 0.9; }
@@ -258,7 +258,7 @@
 
 <!-- 遊戲主場景 -->
 <div class="container" id="mainGameContainer">
-    <h1>Flexbox 5關大闖關 V2.2</h1>
+    <h1>Flexbox 5關大闖關 V2.3</h1>
     <div class="level-nav" id="levelNav"></div>
 
     <div class="game-area">
@@ -304,14 +304,16 @@
         {
             title: "第二關",
             description: "太棒了！接下來請讓這三張橫排的卡片，在畫布中「水平置中」對齊。",
-            hint: "控制「主軸對齊」的屬性是 justify-content。置中要填什麼值？",
+            // [已透露 center 關鍵字]
+            hint: "控制「主軸對齊」的屬性是 justify-content。既然要置中，請試試看把值設定為關鍵字「center」吧！",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.justifyContent === "center"
         },
         {
             title: "第三關",
             description: "現在卡片已經水平置中了，請再加把勁，讓卡片也「垂直置中」吧！",
-            hint: "控制「交差軸對齊」的屬性是 align-items。請確保主軸是水平的喔。",
+            // [已透露 center 關鍵字]
+            hint: "控制「交差軸對齊」的屬性是 align-items。同樣地，請將它的值也設定為關鍵字「center」唷！",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.alignItems === "center"
         },
@@ -333,7 +335,7 @@
 
     let currentLevelIndex = 0;
     const completedLevels = new Set(); 
-    let fireworkTimer = null; // 用於控制煙火排程
+    let fireworkTimer = null; 
 
     // --- 初始化 ---
     function initGame() {
@@ -432,7 +434,7 @@
                     if (currentLevelIndex < levels.length - 1) {
                         loadLevel(currentLevelIndex + 1); 
                     } else {
-                        triggerCleanEndingView(); // 通關！切換全新畫面
+                        triggerCleanEndingView(); 
                     }
                 }, 1500); 
 
@@ -462,11 +464,11 @@
             confetti.style.top = '-10px';
             confetti.style.animationDelay = (Math.random() * 0.4) + 's';
             panel.appendChild(confetti);
-            confetti.addEventListener('animationend', () => confetti.remove());
+            onfetti.addEventListener('animationend', () => confetti.remove());
         }
     }
 
-    // --- ✨ 🎉 [全新改版] 獨立且乾淨的通關結局畫面 ---
+    // --- 🎉 獨立且乾淨的通關結局畫面 ---
     function triggerCleanEndingView() {
         // 1. 直接隱藏原本裝載遊戲的整個主頁面容器，徹底清除原有的 DOM 佈局
         document.getElementById("mainGameContainer").style.display = "none";
@@ -487,7 +489,7 @@
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
             fireworkCount++;
-            if(fireworkCount >= 15) clearInterval(fireworkTimer); // 放 15 枚大煙火後停止
+            if(fireworkCount >= 15) clearInterval(fireworkTimer); 
         }, 300);
     }
 
@@ -497,7 +499,6 @@
         const colors = ['#f59e0b', '#fbbf24', '#ffffff', '#22c55e', '#3b82f6', '#ec4899'];
         const color = colors[Math.floor(Math.random() * colors.length)];
         
-        // 在新畫面的視窗內隨機產生爆裂中心點
         const centerX = (Math.random() * 70 + 15) + '%';
         const centerY = (Math.random() * 50 + 20) + '%';
         
@@ -509,7 +510,6 @@
             particle.style.top = centerY;
             particle.style.boxShadow = `0 0 12px ${color}`;
             
-            // 隨機爆裂角度與拋物線距離
             const angle = Math.random() * Math.PI * 2;
             const distance = Math.random() * 180 + 60;
             particle.style.setProperty('--fx-x', Math.cos(angle) * distance + 'px');
@@ -526,11 +526,9 @@
     function completelyResetGame() {
         if(fireworkTimer) clearInterval(fireworkTimer);
         
-        // 移除獨立結局畫面
         const endingView = document.getElementById("cleanEndingView");
         if (endingView) endingView.remove();
         
-        // 重新顯示主遊戲，並初始化
         document.getElementById("mainGameContainer").style.display = "block";
         completedLevels.clear();
         loadLevel(0);
