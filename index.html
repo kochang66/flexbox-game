@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V2.5 - 萌寵大破關！</title>
+    <title>Flexbox 倉鼠大冒險 V2.6 - 會動的萌寵與畢業大禮花！</title>
     <style>
         /* --- 基礎版面與配色 --- */
         :root {
@@ -27,7 +27,6 @@
             min-height: 100vh;
         }
 
-        /* 遊戲主容器 */
         .container {
             width: 100%;
             max-width: 1100px;
@@ -41,7 +40,7 @@
 
         h1 {
             text-align: center;
-            color: #d97706; /* 改為溫暖的倉鼠葵瓜子金 */
+            color: #d97706; 
             margin-top: 0;
             margin-bottom: 25px;
             font-size: 2.2em;
@@ -88,7 +87,6 @@
             .game-area { flex-direction: column; }
         }
         
-        /* 左側控制面板 */
         .control-panel {
             flex: 1;
             display: flex;
@@ -97,7 +95,7 @@
             min-width: 320px;
         }
         .instruction-box {
-            background: #fffbeb; /* 改為黃色溫馨調 */
+            background: #fffbeb; 
             padding: 18px;
             border-left: 6px solid #d97706;
             border-radius: 8px;
@@ -116,7 +114,6 @@
             line-height: 1.5;
         }
         
-        /* CSS 輸入區域 */
         .code-container {
             background: var(--code-bg);
             color: #d4d4d4;
@@ -142,7 +139,6 @@
             outline: none;
         }
 
-        /* 按鈕群組 */
         .btn-group {
             display: flex;
             gap: 15px;
@@ -168,10 +164,10 @@
         .check-btn.error { background-color: var(--danger-color); animation: shake 0.4s; }
         .check-btn.success-glow { background: linear-gradient(45deg, #f59e0b, #fbbf24); }
 
-        /* 右側畫布預覽區（倉鼠的家） */
+        /* 右側畫布預覽區 */
         .visual-panel {
             flex: 1;
-            background: #fef6e4; /* 葵瓜子淺黃底色 */
+            background: #fef6e4; 
             border: 4px dashed #f59e0b;
             border-radius: 12px;
             min-height: 400px;
@@ -180,7 +176,7 @@
         }
         #flex-container { width: 100%; height: 100%; box-sizing: border-box; padding: 15px; display: flex; }
 
-        /* --- 🐹 萌萌倉鼠樣式核心區 --- */
+        /* --- 🐹 會動的動態倉鼠樣式核心區 --- */
         .card {
             width: 95px; 
             height: 95px; 
@@ -189,33 +185,49 @@
             font-weight: 800; 
             transition: all 0.3s ease;
             display: flex;
-            flex-direction: column; /* 讓表情跟數字上下排 */
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
-            border-radius: 50%; /* 圓滾滾的倉鼠身軀 */
+            border-radius: 50%; 
             position: relative;
             box-shadow: 0 6px 12px rgba(217,119,6,0.2);
             border: 3px solid #fff;
+            
+            /* 【新增】綁定倉鼠專屬的活體動畫 */
+            animation: hamsterFloat 3s ease-in-out infinite;
         }
-        /* 倉鼠表情大小 */
+
+        /* 讓每隻倉鼠的擺動速率錯開，看起來更自然可愛 */
+        .card-1 { background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0s; }
+        .card-2 { background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.3s; }
+        .card-3 { background: linear-gradient(135deg, #da77f2, #9c36b5); animation-delay: 0.6s; }
+        .card-4 { background: linear-gradient(135deg, #ffd43b, #f59f00); animation-delay: 0.9s; }
+        .card-5 { background: linear-gradient(135deg, #63e6be, #0ca678); animation-delay: 1.2s; }
+
+        /* 【新增】純 CSS 倉鼠呼吸跳動特效 */
+        @keyframes hamsterFloat {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.03); } /* 往上浮動並微微放大 */
+            100% { transform: translateY(0) scale(1); }
+        }
+
         .card .avatar {
             font-size: 34px;
             margin-bottom: 2px;
+            /* 讓表情也有一個微微發抖的萌感 */
+            animation: hamsterSquish 1.5s ease-in-out infinite alternate;
         }
-        /* 倉鼠編號角標 */
+        @keyframes hamsterSquish {
+            0% { transform: scaleX(1); }
+            100% { transform: scaleX(0.95); }
+        }
+
         .card .number {
             font-size: 14px;
             background: rgba(0,0,0,0.3);
             padding: 2px 8px;
             border-radius: 10px;
         }
-        
-        /* 倉鼠漸層毛色（披風） */
-        .card-1 { background: linear-gradient(135deg, #ff8787, #e03131); }
-        .card-2 { background: linear-gradient(135deg, #74c0fc, #1971c2); }
-        .card-3 { background: linear-gradient(135deg, #da77f2, #9c36b5); }
-        .card-4 { background: linear-gradient(135deg, #ffd43b, #f59f00); }
-        .card-5 { background: linear-gradient(135deg, #63e6be, #0ca678); }
 
         /* --- 錯誤按鈕抖動 --- */
         @keyframes shake {
@@ -234,7 +246,7 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- 🎉 通關祝賀佈局樣式 --- */
+        /* --- 🎉 [還原大器版] 畢業通關佈局樣式 --- */
         .ending-view {
             width: 100vw;
             height: 100vh;
@@ -250,6 +262,7 @@
             z-index: 9999;
             overflow: hidden; 
         }
+        /* 還原：恭喜畢業啦！ */
         .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
         .ending-view p { font-size: 1.6em; color: #ffffff; margin: 20px 0 40px 0; opacity: 0.9; }
         .restart-btn {
@@ -309,14 +322,12 @@
         </div>
 
         <div class="visual-panel">
-            <!-- 原為 flex-container，為了情境感改名為倉鼠籠 hamster-cage -->
             <div id="flex-container"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // 倉鼠表情資料庫庫，讓每隻倉鼠各有特色！
     const hamsters = [
         { avatar: "🐹", name: "胖胖" },
         { avatar: "🐹💤", name: "呆呆" },
@@ -328,7 +339,7 @@
     const levels = [
         {
             title: "第一關",
-            description: "小倉鼠們預設是上下疊在一起的。請使用屬性讓這三隻倉鼠舒服地「橫向排成一列」吧！",
+            description: "小倉鼠們預設是上下疊在一起的。請使用屬性讓這三張倉鼠舒服地「橫向排成一列」吧！",
             hint: "設定主軸方向：flex-direction: row; (註：Flex 預設即為 row，你可以直接點檢查看看過關條件喔)",
             cardsCount: 3,
             initStyles: { flexDirection: "column" }, 
@@ -336,7 +347,7 @@
         },
         {
             title: "第二關",
-            description: "太棒了！接下來請讓這三隻橫排的倉鼠，在籠子裡「水平置中」對齊集合。",
+            description: "太棒了！接下來請讓這三張橫排的倉鼠，在籠子裡「水平置中」對齊集合。",
             hint: "控制「主軸對齊」的屬性是 justify-content。既然要置中，請試試看把值設定為關鍵字「center」吧！",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.justifyContent === "center"
@@ -408,13 +419,10 @@
         
         if (level.initStyles) Object.assign(container.style, level.initStyles);
 
-        // 動態產生超可愛倉鼠 HTML 結構
         container.innerHTML = "";
         for (let i = 0; i < level.cardsCount; i++) {
             const card = document.createElement("div");
             card.className = `card card-${i+1}`;
-            
-            // 塞入倉鼠頭像與編號
             card.innerHTML = `
                 <div class="avatar">${hamsters[i].avatar}</div>
                 <div class="number">No.${i+1}</div>
@@ -427,7 +435,6 @@
         loadLevel(index);
     }
 
-    // 提示與按鈕控制邏輯維持原有的高穩定度版本
     function toggleHint() {
         const hintBox = document.getElementById("hintBox");
         hintBox.style.display = window.getComputedStyle(hintBox).display === "none" ? "block" : "none";
@@ -503,6 +510,7 @@
         }
     }
 
+    // 🎉 還原：獨立滿版「恭喜畢業啦！」畫面
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
@@ -510,8 +518,8 @@
         endingDiv.className = "ending-view";
         endingDiv.id = "cleanEndingView";
         endingDiv.innerHTML = `
-            <h2>🏆 恭喜成為倉鼠排版大師！</h2>
-            <p>你已經成功用 Flexbox 幫所有小倉鼠找到最完美的家！</p>
+            <h2>🏆 恭喜畢業啦！</h2>
+            <p>你已經完美掌握了核心 Flexbox 語法！</p>
             <button class="restart-btn" onclick="completelyResetGame()">再跟倉鼠玩一次 🔄</button>
         `;
         document.body.appendChild(endingDiv);
