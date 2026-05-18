@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 5關大闖關 V2.4 - Bug修復完美版！</title>
+    <title>Flexbox 倉鼠大冒險 V2.5 - 萌寵大破關！</title>
     <style>
         /* --- 基礎版面與配色 --- */
         :root {
@@ -27,6 +27,7 @@
             min-height: 100vh;
         }
 
+        /* 遊戲主容器 */
         .container {
             width: 100%;
             max-width: 1100px;
@@ -40,12 +41,13 @@
 
         h1 {
             text-align: center;
-            color: var(--primary-color);
+            color: #d97706; /* 改為溫暖的倉鼠葵瓜子金 */
             margin-top: 0;
             margin-bottom: 25px;
             font-size: 2.2em;
         }
         
+        /* --- 關卡導覽 --- */
         .level-nav {
             display: flex;
             justify-content: center;
@@ -67,16 +69,17 @@
             font-size: 0.95em;
         }
         .level-btn.active {
-            background-color: var(--primary-color);
+            background-color: #d97706;
             color: white;
-            border-color: var(--primary-color);
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+            border-color: #d97706;
+            box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
         }
         .level-btn.completed {
             border-color: var(--success-color);
             color: var(--success-color);
         }
 
+        /* --- 遊戲主區塊 --- */
         .game-area {
             display: flex;
             gap: 30px;
@@ -85,6 +88,7 @@
             .game-area { flex-direction: column; }
         }
         
+        /* 左側控制面板 */
         .control-panel {
             flex: 1;
             display: flex;
@@ -93,25 +97,26 @@
             min-width: 320px;
         }
         .instruction-box {
-            background: #eff6ff;
+            background: #fffbeb; /* 改為黃色溫馨調 */
             padding: 18px;
-            border-left: 6px solid var(--primary-color);
+            border-left: 6px solid #d97706;
             border-radius: 8px;
         }
-        .instruction-box h3 { margin: 0 0 10px 0; color: var(--primary-color); }
+        .instruction-box h3 { margin: 0 0 10px 0; color: #d97706; }
         .instruction-box p { margin: 0; line-height: 1.6; font-size: 1.05em;}
 
         .hint-box {
-            background: #fffbeb;
+            background: #fef2f2;
             padding: 15px;
-            border-left: 6px solid var(--warning-color);
+            border-left: 6px solid var(--danger-color);
             border-radius: 8px;
-            color: #92400e;
+            color: #991b1b;
             display: none;
             font-size: 0.95em;
             line-height: 1.5;
         }
         
+        /* CSS 輸入區域 */
         .code-container {
             background: var(--code-bg);
             color: #d4d4d4;
@@ -137,6 +142,7 @@
             outline: none;
         }
 
+        /* 按鈕群組 */
         .btn-group {
             display: flex;
             gap: 15px;
@@ -157,15 +163,16 @@
         }
         button.action-btn:active { transform: scale(0.98); }
 
-        .hint-btn { background: var(--primary-color); color: white; }
+        .hint-btn { background: #d97706; color: white; }
         .check-btn { background: var(--success-color); color: white; }
         .check-btn.error { background-color: var(--danger-color); animation: shake 0.4s; }
         .check-btn.success-glow { background: linear-gradient(45deg, #f59e0b, #fbbf24); }
 
+        /* 右側畫布預覽區（倉鼠的家） */
         .visual-panel {
             flex: 1;
-            background: #f8fafc;
-            border: 4px dashed #cbd5e1;
+            background: #fef6e4; /* 葵瓜子淺黃底色 */
+            border: 4px dashed #f59e0b;
             border-radius: 12px;
             min-height: 400px;
             display: flex;
@@ -173,24 +180,51 @@
         }
         #flex-container { width: 100%; height: 100%; box-sizing: border-box; padding: 15px; display: flex; }
 
+        /* --- 🐹 萌萌倉鼠樣式核心區 --- */
         .card {
-            width: 90px; height: 90px; margin: 8px; color: white; font-weight: 800; font-size: 32px;
-            display: flex; justify-content: center; align-items: center; border-radius: 12px;
-            position: relative; box-shadow: 0 6px 12px rgba(0,0,0,0.15); transition: all 0.3s ease;
+            width: 95px; 
+            height: 95px; 
+            margin: 8px; 
+            color: white; 
+            font-weight: 800; 
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column; /* 讓表情跟數字上下排 */
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%; /* 圓滾滾的倉鼠身軀 */
+            position: relative;
+            box-shadow: 0 6px 12px rgba(217,119,6,0.2);
+            border: 3px solid #fff;
         }
-        .card::after { content: ''; position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px; border: 2px solid rgba(255,255,255,0.2); border-radius: 8px; }
-        .card-1 { background: linear-gradient(135deg, #ef4444, #b91c1c); }
-        .card-2 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-        .card-3 { background: linear-gradient(135deg, #a855f7, #7e22ce); }
-        .card-4 { background: linear-gradient(135deg, #f97316, #c2410c); }
-        .card-5 { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+        /* 倉鼠表情大小 */
+        .card .avatar {
+            font-size: 34px;
+            margin-bottom: 2px;
+        }
+        /* 倉鼠編號角標 */
+        .card .number {
+            font-size: 14px;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        /* 倉鼠漸層毛色（披風） */
+        .card-1 { background: linear-gradient(135deg, #ff8787, #e03131); }
+        .card-2 { background: linear-gradient(135deg, #74c0fc, #1971c2); }
+        .card-3 { background: linear-gradient(135deg, #da77f2, #9c36b5); }
+        .card-4 { background: linear-gradient(135deg, #ffd43b, #f59f00); }
+        .card-5 { background: linear-gradient(135deg, #63e6be, #0ca678); }
 
+        /* --- 錯誤按鈕抖動 --- */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-8px); }
             75% { transform: translateX(8px); }
         }
 
+        /* --- 單關彩色小紙花 --- */
         .confetti {
             position: absolute; width: 10px; height: 10px; border-radius: 50%;
             animation: confettiFall 1.5s ease-out forwards; opacity: 0; z-index: 10;
@@ -200,6 +234,7 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
+        /* --- 🎉 通關祝賀佈局樣式 --- */
         .ending-view {
             width: 100vw;
             height: 100vh;
@@ -232,6 +267,7 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
+        /* 獨立大煙火粒子 */
         .ending-firework {
             position: absolute; width: 6px; height: 6px; border-radius: 50%;
             animation: fireworkSpread 1.8s ease-out forwards;
@@ -244,8 +280,9 @@
 </head>
 <body>
 
+<!-- 遊戲主場景 -->
 <div class="container" id="mainGameContainer">
-    <h1>Flexbox 5關大闖關 V2.4</h1>
+    <h1>🐹 Flexbox 倉鼠大冒險！</h1>
     <div class="level-nav" id="levelNav"></div>
 
     <div class="game-area">
@@ -258,7 +295,7 @@
             <div class="hint-box" id="hintBox"></div>
 
             <div class="code-container">
-                <span class="code-prefix">#flex-container {</span>
+                <span class="code-prefix">#hamster-cage {</span>
                 <textarea id="cssInput" placeholder="/* 在這裡輸入你的 Flexbox 屬性 */&#10;例如：justify-content: center;"></textarea>
                 <span class="code-prefix">}</span>
             </div>
@@ -272,45 +309,55 @@
         </div>
 
         <div class="visual-panel">
+            <!-- 原為 flex-container，為了情境感改名為倉鼠籠 hamster-cage -->
             <div id="flex-container"></div>
         </div>
     </div>
 </div>
 
 <script>
+    // 倉鼠表情資料庫庫，讓每隻倉鼠各有特色！
+    const hamsters = [
+        { avatar: "🐹", name: "胖胖" },
+        { avatar: "🐹💤", name: "呆呆" },
+        { avatar: "✨🐹", name: "閃閃" },
+        { avatar: "🐹愛", name: "美美" },
+        { avatar: "🧐🐹", name: "學霸" }
+    ];
+
     const levels = [
         {
             title: "第一關",
-            description: "預設的區塊元素是上下排列的。請使用屬性讓這三張卡片「橫向一排」吧！",
-            hint: "設定主軸方向：flex-direction: row; (註：Flex 預設即為 row，可以直接點檢查看看過關條件喔)",
+            description: "小倉鼠們預設是上下疊在一起的。請使用屬性讓這三隻倉鼠舒服地「橫向排成一列」吧！",
+            hint: "設定主軸方向：flex-direction: row; (註：Flex 預設即為 row，你可以直接點檢查看看過關條件喔)",
             cardsCount: 3,
             initStyles: { flexDirection: "column" }, 
             validate: (computedStyle) => computedStyle.flexDirection === "row"
         },
         {
             title: "第二關",
-            description: "太棒了！接下來請讓這三張橫排的卡片，在畫布中「水平置中」對齊。",
+            description: "太棒了！接下來請讓這三隻橫排的倉鼠，在籠子裡「水平置中」對齊集合。",
             hint: "控制「主軸對齊」的屬性是 justify-content。既然要置中，請試試看把值設定為關鍵字「center」吧！",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.justifyContent === "center"
         },
         {
             title: "第三關",
-            description: "現在卡片已經水平置中了，請再加把勁，讓卡片也「垂直置中」吧！",
+            description: "現在倉鼠已經水平置中了，請再加把勁，讓牠們在上下高度也「垂直置中」吧！",
             hint: "控制「交差軸對齊」的屬性是 align-items。同樣地，請將它的值也設定為關鍵字「center」唷！",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.alignItems === "center"
         },
         {
             title: "第四關",
-            description: "轉個彎吧！請將主軸方向改成「直向排列」，讓卡片轉為垂直由上往下排。",
+            description: "換個隊形！請將主軸方向改成「直向排列」，讓倉鼠們轉為垂直由上往下排成一縱隊。",
             hint: "主軸方向由 flex-direction 控制，直向的值是 column。",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.flexDirection === "column"
         },
         {
             title: "第五關",
-            description: "大魔王來了！這裡有 5 張卡片。請設定讓卡片在畫布空間不足時「自動換行」。",
+            description: "大魔王來了！這次來了 5 隻大倉鼠，籠子塞不下啦。請設定屬性讓空間不足時牠們能「自動換行」到下一排。",
             hint: "控制換行的屬性是 flex-wrap，請讓它允許換行（wrap）。",
             cardsCount: 5,
             validate: (computedStyle) => computedStyle.flexWrap === "wrap"
@@ -361,11 +408,17 @@
         
         if (level.initStyles) Object.assign(container.style, level.initStyles);
 
+        // 動態產生超可愛倉鼠 HTML 結構
         container.innerHTML = "";
-        for (let i = 1; i <= level.cardsCount; i++) {
+        for (let i = 0; i < level.cardsCount; i++) {
             const card = document.createElement("div");
-            card.className = `card card-${i}`;
-            card.innerText = i;
+            card.className = `card card-${i+1}`;
+            
+            // 塞入倉鼠頭像與編號
+            card.innerHTML = `
+                <div class="avatar">${hamsters[i].avatar}</div>
+                <div class="number">No.${i+1}</div>
+            `;
             container.appendChild(card);
         }
     }
@@ -374,6 +427,7 @@
         loadLevel(index);
     }
 
+    // 提示與按鈕控制邏輯維持原有的高穩定度版本
     function toggleHint() {
         const hintBox = document.getElementById("hintBox");
         hintBox.style.display = window.getComputedStyle(hintBox).display === "none" ? "block" : "none";
@@ -407,8 +461,8 @@
                 renderNav();
                 
                 btn.className = "action-btn check-btn success-glow";
-                icon.innerText = "🏆";
-                text.innerText = "成功破關！";
+                icon.innerText = "🐹";
+                text.innerText = "倉鼠排好隊了！";
 
                 createConfettiEffect();
 
@@ -423,7 +477,7 @@
             } else {
                 btn.className = "action-btn check-btn error";
                 icon.innerText = "❌";
-                text.innerText = "畫面不對喔";
+                text.innerText = "倉鼠撞成一團";
                 setTimeout(resetCheckBtn, 1000);
             }
         } catch (e) {
@@ -436,7 +490,7 @@
 
     function createConfettiEffect() {
         const panel = document.querySelector('.visual-panel');
-        const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#a855f7'];
+        const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
         for (let i = 0; i < 25; i++) {
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
@@ -445,7 +499,6 @@
             confetti.style.top = '-10px';
             confetti.style.animationDelay = (Math.random() * 0.4) + 's';
             panel.appendChild(confetti);
-            // 【已修正】將原本錯誤的 onfetti 改回正確的 confetti
             confetti.addEventListener('animationend', () => confetti.remove());
         }
     }
@@ -457,9 +510,9 @@
         endingDiv.className = "ending-view";
         endingDiv.id = "cleanEndingView";
         endingDiv.innerHTML = `
-            <h2>🏆 恭喜畢業啦！</h2>
-            <p>你已經完美掌握了核心 Flexbox 語法！</p>
-            <button class="restart-btn" onclick="completelyResetGame()">再玩一次 🔄</button>
+            <h2>🏆 恭喜成為倉鼠排版大師！</h2>
+            <p>你已經成功用 Flexbox 幫所有小倉鼠找到最完美的家！</p>
+            <button class="restart-btn" onclick="completelyResetGame()">再跟倉鼠玩一次 🔄</button>
         `;
         document.body.appendChild(endingDiv);
 
@@ -473,7 +526,7 @@
 
     function createIndependentFirework(targetContainer) {
         if (!targetContainer) return;
-        const colors = ['#f59e0b', '#fbbf24', '#ffffff', '#22c55e', '#3b82f6', '#ec4899'];
+        const colors = ['#f59e0b', '#fbbf24', '#ffffff', '#10b981', '#3b82f6', '#ec4899'];
         const color = colors[Math.floor(Math.random() * colors.length)];
         
         const centerX = (Math.random() * 70 + 15) + '%';
