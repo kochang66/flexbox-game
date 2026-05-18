@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V2.6 - 會動的萌寵與畢業大禮花！</title>
+    <title>Flexbox 倉鼠大冒險 V2.7 - 豪華開場與畢業大禮花！</title>
     <style>
         /* --- 基礎版面與配色 --- */
         :root {
@@ -176,7 +176,7 @@
         }
         #flex-container { width: 100%; height: 100%; box-sizing: border-box; padding: 15px; display: flex; }
 
-        /* --- 🐹 會動的動態倉鼠樣式核心區 --- */
+        /* --- 🐹 活體動態倉鼠樣式 --- */
         .card {
             width: 95px; 
             height: 95px; 
@@ -192,29 +192,24 @@
             position: relative;
             box-shadow: 0 6px 12px rgba(217,119,6,0.2);
             border: 3px solid #fff;
-            
-            /* 【新增】綁定倉鼠專屬的活體動畫 */
             animation: hamsterFloat 3s ease-in-out infinite;
         }
 
-        /* 讓每隻倉鼠的擺動速率錯開，看起來更自然可愛 */
         .card-1 { background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0s; }
         .card-2 { background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.3s; }
         .card-3 { background: linear-gradient(135deg, #da77f2, #9c36b5); animation-delay: 0.6s; }
         .card-4 { background: linear-gradient(135deg, #ffd43b, #f59f00); animation-delay: 0.9s; }
         .card-5 { background: linear-gradient(135deg, #63e6be, #0ca678); animation-delay: 1.2s; }
 
-        /* 【新增】純 CSS 倉鼠呼吸跳動特效 */
         @keyframes hamsterFloat {
             0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-8px) scale(1.03); } /* 往上浮動並微微放大 */
+            50% { transform: translateY(-8px) scale(1.03); } 
             100% { transform: translateY(0) scale(1); }
         }
 
         .card .avatar {
             font-size: 34px;
             margin-bottom: 2px;
-            /* 讓表情也有一個微微發抖的萌感 */
             animation: hamsterSquish 1.5s ease-in-out infinite alternate;
         }
         @keyframes hamsterSquish {
@@ -246,7 +241,79 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- 🎉 [還原大器版] 畢業通關佈局樣式 --- */
+        /* --- ✨ 🚀 [全新功能] 炫麗開場歡迎畫面樣式 --- */
+        .welcome-view {
+            width: 100vw;
+            height: 100vh;
+            background-color: #0b0f19; /* 太空極致深藍黑 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 10000; /* 層級最高 */
+            overflow: hidden;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        /* 開場畫面淡出動畫 */
+        .welcome-view.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .welcome-view h1 {
+            font-size: 3.5em;
+            color: #fbbf24;
+            text-shadow: 0 0 30px rgba(245,158,11,0.8);
+            margin-bottom: 10px;
+            animation: bounceIn 1.2s ease;
+        }
+        .welcome-view p {
+            color: #94a3b8;
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+        /* 開場畫面限定：並排跳動的萌寵展示區 */
+        .welcome-hamsters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+        .welcome-hamsters .ham-preview {
+            width: 75px; height: 75px;
+            border-radius: 50%;
+            font-size: 32px;
+            display: flex; justify-content: center; align-items: center;
+            border: 3px solid white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            animation: hamsterFloat 2.5s ease-in-out infinite;
+        }
+        /* 啟動按鈕霓虹光芒 */
+        .start-adventure-btn {
+            padding: 18px 45px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+            transition: all 0.2s ease;
+            animation: pulseGlow 2s infinite;
+        }
+        .start-adventure-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(245, 158, 11, 0.8);
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(245, 158, 11, 0.7); }
+            100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
+        }
+
+        /* --- 🎉 畢業通關佈局樣式 --- */
         .ending-view {
             width: 100vw;
             height: 100vh;
@@ -262,7 +329,6 @@
             z-index: 9999;
             overflow: hidden; 
         }
-        /* 還原：恭喜畢業啦！ */
         .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
         .ending-view p { font-size: 1.6em; color: #ffffff; margin: 20px 0 40px 0; opacity: 0.9; }
         .restart-btn {
@@ -280,7 +346,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* 獨立大煙火粒子 */
         .ending-firework {
             position: absolute; width: 6px; height: 6px; border-radius: 50%;
             animation: fireworkSpread 1.8s ease-out forwards;
@@ -292,6 +357,23 @@
     </style>
 </head>
 <body>
+
+<!-- 🚀 [全新功能] 炫麗開場歡迎畫面 -->
+<div class="welcome-view" id="welcomeStage">
+    <h1>🐹 Flexbox 倉鼠大冒險！</h1>
+    <p>—— 用排版魔法，幫萌寵找到完美的家 ——</p>
+    
+    <!-- 倉鼠天團列隊歡迎 -->
+    <div class="welcome-hamsters">
+        <div class="ham-preview" style="background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0.0s;">🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.2s;">🐹💤</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #da77f2, #9c36b5); animation-delay: 0.4s;">✨🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #ffd43b, #f59f00); animation-delay: 0.6s;">🐹🐾</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #63e6be, #0ca678); animation-delay: 0.8s;">🧐🐹</div>
+    </div>
+
+    <button class="start-adventure-btn" onclick="startAdventure()">開始冒險 🚀</button>
+</div>
 
 <!-- 遊戲主場景 -->
 <div class="container" id="mainGameContainer">
@@ -332,14 +414,14 @@
         { avatar: "🐹", name: "胖胖" },
         { avatar: "🐹💤", name: "呆呆" },
         { avatar: "✨🐹", name: "閃閃" },
-        { avatar: "🐹愛", name: "美美" },
+        { avatar: "🐹🐾", name: "美美" },
         { avatar: "🧐🐹", name: "學霸" }
     ];
 
     const levels = [
         {
             title: "第一關",
-            description: "小倉鼠們預設是上下疊在一起的。請使用屬性讓這三張倉鼠舒服地「橫向排成一列」吧！",
+            description: "小倉鼠們預設是上下疊在一起的。請使用屬性讓這三隻倉鼠舒服地「橫向排成一列」吧！",
             hint: "設定主軸方向：flex-direction: row; (註：Flex 預設即為 row，你可以直接點檢查看看過關條件喔)",
             cardsCount: 3,
             initStyles: { flexDirection: "column" }, 
@@ -382,6 +464,17 @@
     function initGame() {
         renderNav();
         loadLevel(currentLevelIndex);
+    }
+
+    // 🚀 [全新功能] 點擊開始冒險按鈕的觸發函式
+    function startAdventure() {
+        const stage = document.getElementById("welcomeStage");
+        stage.classList.add("fade-out"); // 加上 CSS 淡出特效
+        
+        // 等動畫演完 (600ms) 後，從 DOM 移除開場元素，釋放記憶體
+        setTimeout(() => {
+            stage.remove();
+        }, 600);
     }
 
     function renderNav() {
@@ -510,7 +603,6 @@
         }
     }
 
-    // 🎉 還原：獨立滿版「恭喜畢業啦！」畫面
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
