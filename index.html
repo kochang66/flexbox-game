@@ -3,62 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Archang's Flexbox 大闖關遊戲！</title>
+    <title>Flexbox 5關大闖關 V2.0 - 煙火加強版！</title>
     <style>
-        /* --- 基礎版面樣式 --- */
+        /* --- 基礎版面與配色 --- */
+        :root {
+            --primary-color: #3b82f6; /* 科技藍 */
+            --success-color: #22c55e; /* 勝利綠 */
+            --warning-color: #f59e0b; /* 提示黃 */
+            --danger-color: #ef4444;
+            --bg-color: #f0f4f8;
+            --text-color: #1e293b;
+            --code-bg: #1e1e1e;
+        }
+
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-color);
             margin: 0;
-            padding: 20px;
-            color: #333;
+            padding: 10px;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
         }
+
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 1100px;
             background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-top: 20px;
+            position: relative; /* 為了讓全螢幕特效定位 */
+            overflow: hidden; /* 確保特效不超出容器 */
         }
+
         h1 {
             text-align: center;
-            color: #4a90e2;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 2.2em;
         }
         
-        /* --- 關卡切換導覽列 --- */
+        /* --- 關卡導覽 --- */
         .level-nav {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
         }
         .level-btn {
-            padding: 10px 15px;
-            border: 2px solid #ddd;
+            padding: 10px 18px;
+            border: 2px solid #e2e8f0;
             background: white;
-            border-radius: 20px;
+            border-radius: 30px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.2s ease;
+            font-size: 0.95em;
+        }
+        .level-btn:hover:not(.active) {
+            background-color: #f8fafc;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
         .level-btn.active {
-            background: #4a90e2;
+            background-color: var(--primary-color);
             color: white;
-            border-color: #4a90e2;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
         }
         .level-btn.completed {
-            border-color: #2ecc71;
-            color: #2ecc71;
+            border-color: var(--success-color);
+            color: var(--success-color);
         }
 
-        /* --- 遊戲主區塊：左邊控制、右邊預覽 --- */
+        /* --- 遊戲主區塊 --- */
         .game-area {
             display: flex;
             gap: 30px;
-            margin-top: 20px;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 850px) {
             .game-area { flex-direction: column; }
         }
         
@@ -67,124 +98,245 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
+            min-width: 320px;
         }
         .instruction-box {
-            background: #eef5fc;
-            padding: 15px;
-            border-left: 5px solid #4a90e2;
-            border-radius: 4px;
+            background: #eff6ff;
+            padding: 18px;
+            border-left: 6px solid var(--primary-color);
+            border-radius: 8px;
         }
+        .instruction-box h3 { margin: 0 0 10px 0; color: var(--primary-color); }
+        .instruction-box p { margin: 0; line-height: 1.6; font-size: 1.05em;}
+
         .hint-box {
-            background: #fff3cd;
-            padding: 10px 15px;
-            border-left: 5px solid #ffc107;
-            border-radius: 4px;
-            font-size: 0.9em;
-            display: none; /* 預設隱藏提示 */
+            background: #fffbeb;
+            padding: 15px;
+            border-left: 6px solid var(--warning-color);
+            border-radius: 8px;
+            color: #92400e;
+            display: none;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
         
-        /* CSS 輸入區域樣式 */
+        /* CSS 輸入區域 */
         .code-container {
-            background: #2d3748;
-            color: #fff;
-            padding: 15px;
-            border-radius: 6px;
-            font-family: 'Courier New', Courier, monospace;
+            background: var(--code-bg);
+            color: #d4d4d4;
+            padding: 18px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 15px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
         }
-        .code-prefix { color: #f6ad55; }
+        .code-prefix { color: #569cd6; } /* 屬性名稱顏色 */
         textarea {
             width: 100%;
-            height: 100px;
-            background: #1a202c;
-            color: #a0aec0;
-            border: 1px solid #4a5568;
-            border-radius: 4px;
-            padding: 10px;
+            height: 120px;
+            background: #2d2d2d;
+            color: #ce9178; /* 屬性值顏色 */
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 12px;
             font-family: inherit;
             font-size: 16px;
             resize: none;
             box-sizing: border-box;
-            margin-top: 5px;
-        }
-        textarea:focus {
+            margin: 10px 0;
             outline: none;
-            border-color: #4a90e2;
-            color: #fff;
+            transition: border-color 0.2s;
         }
+        textarea:focus { border-color: var(--primary-color); }
 
-        /* 按鈕群組 */
+        /* 按鈕群組 (修正排版與樣式) */
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
         button.action-btn {
-            flex: 1;
-            padding: 12px;
+            flex: 1; /* 兩個按鈕平分寬度 */
+            padding: 14px;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
+            transition: all 0.2s ease, transform 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
-        .check-btn { background: #2ecc71; color: white; }
-        .hint-btn { background: #ffc107; color: #333; }
+        button.action-btn:active { transform: scale(0.98); }
+
+        /* [修改] 提示按鈕也改為白色文字 */
+        .hint-btn { 
+            background: var(--primary-color); /* 改為藍色 */
+            color: white; /* 白色文字 */
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+        }
+        .hint-btn:hover { background-color: #2563eb; }
+
+        /* 檢查按鈕 */
+        .check-btn { 
+            background: var(--success-color); 
+            color: white; 
+            box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2);
+        }
+        .check-btn:hover { background-color: #16a34a; }
+        
+        /* 錯誤狀態按鈕 */
+        .check-btn.error {
+            background-color: var(--danger-color);
+            animation: shake 0.4s;
+        }
+        
+        /* 成功通關特效樣式 (金色按鈕) */
+        .check-btn.success-glow {
+            background: linear-gradient(45deg, #f59e0b, #fbbf24);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+        }
 
         /* 右側畫布預覽區 */
         .visual-panel {
             flex: 1;
-            background: #edf2f7;
-            border: 3px dashed #cbd5e0;
-            border-radius: 8px;
-            min-height: 350px;
+            background: #f8fafc;
+            border: 4px dashed #cbd5e1;
+            border-radius: 12px;
+            min-height: 400px;
             position: relative;
+            display: flex; /* 確保容器撐滿 */
         }
         
-        /* Flexbox 容器（這是學生要用 CSS 控制的主角） */
+        /* Flexbox 容器 */
         #flex-container {
             width: 100%;
             height: 100%;
-            min-height: 350px;
             box-sizing: border-box;
-            padding: 10px;
-            /* 注意：預設就是 flex，讓學生專注在 flex 屬性發揮 */
-            display: flex; 
+            padding: 15px;
+            display: flex; /* 遊戲核心 */
         }
 
-        /* 卡片基本樣式 */
+        /* 卡片樣式 */
         .card {
-            width: 80px;
-            height: 80px;
-            margin: 5px;
+            width: 90px;
+            height: 90px;
+            margin: 8px;
             color: white;
-            font-weight: bold;
-            font-size: 24px;
+            font-weight: 800;
+            font-size: 32px;
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease; /* 讓卡片移動時有動畫 */
+            position: relative;
         }
-        .card-1 { background: #e74c3c; }
-        .card-2 { background: #3498db; }
-        .card-3 { background: #9b59b6; }
-        .card-4 { background: #e67e22; }
-        .card-5 { background: #1abc9c; }
+        /* 讓卡片數字更有質感 */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+        .card-1 { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .card-2 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .card-3 { background: linear-gradient(135deg, #a855f7, #7e22ce); }
+        .card-4 { background: linear-gradient(135deg, #f97316, #c2410c); }
+        .card-5 { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+
+        /* --- ✨ 動畫與特效 CSS --- */
+        
+        /* 1. 按鈕抖動動畫 (錯誤時) */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* 2. 🎉 破關點點紙花特效 (單關) */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: confettiFall 1.5s ease-out forwards;
+            opacity: 0;
+            z-index: 10;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(200px) scale(0.5); opacity: 0; }
+        }
+
+        /* 3. 🎓 全數通關超級大煙火特效 */
+        .grand-finale-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+            color: #fbbf24; /* 金色 */
+            text-align: center;
+        }
+        .grand-finale-overlay.show { opacity: 1; visibility: visible; }
+        .grand-finale-overlay h2 { font-size: 3.5em; margin: 0; text-shadow: 0 0 20px #f59e0b; }
+        .grand-finale-overlay p { font-size: 1.5em; color: white; margin: 15px 0 30px 0; }
+        .replay-btn {
+            padding: 15px 30px;
+            background: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+        }
+
+        /* 煙火花朵樣式 */
+        .firework {
+            position: absolute;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            animation: fireworkExplode 2s ease-out infinite;
+        }
+        @keyframes fireworkExplode {
+            0% { transform: translate(0, 0); opacity: 1; width: 5px; height: 5px;}
+            100% { transform: translate(var(--tw-x), var(--tw-y)); opacity: 0; width: 2px; height: 2px;}
+        }
+
     </style>
 </head>
 <body>
 
+<!-- 全數通關特效遮罩層 -->
+<div class="grand-finale-overlay" id="finalOverlay">
+    <h2>🏆 恭喜畢業啦！</h2>
+    <p>你已經完美掌握了核心 Flexbox 語法！</p>
+    <button class="replay-btn" onclick="resetGame()">再玩一次 🔄</button>
+    <!-- 煙火會由 JS 動態貼在這裡 -->
+</div>
+
 <div class="container">
-    <h1>Archang's Flexbox 大闖關遊戲！</h1>
+    <h1>Flexbox 5關大闖關 V2.0</h1>
     
-    <!-- 關卡導覽按鈕 -->
     <div class="level-nav" id="levelNav"></div>
 
     <div class="game-area">
-        <!-- 左側控制面板 -->
         <div class="control-panel">
             <div class="instruction-box">
-                <h3>任務目標</h3>
+                <h3><span id="levelTitle"></span>: 任務目標</h3>
                 <p id="targetDescription">載入中...</p>
             </div>
             
@@ -197,50 +349,51 @@
             </div>
 
             <div class="btn-group">
-                <button class="action-btn hint-btn" onclick="toggleHint()">檢視提示</button>
-                <button class="action-btn check-btn" onclick="checkAnswer()">檢查答案</button>
+                <!-- [修改] 提示按鈕圖示與樣式 -->
+                <button class="action-btn hint-btn" onclick="toggleHint()">
+                    <span>💡</span> 快速提示
+                </button>
+                <!-- 檢查按鈕圖示 -->
+                <button class="action-btn check-btn" id="checkBtn" onclick="checkAnswer()">
+                    <span id="checkIcon">✅</span> <span id="checkText">檢查答案</span>
+                </button>
             </div>
         </div>
 
-        <!-- 右側視覺預覽面板 -->
         <div class="visual-panel">
             <div id="flex-container">
-                <!-- 卡片會由 JavaScript 根據關卡動態產生 -->
+                <!-- 卡片由 JS 動態產生 -->
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- 關卡資料庫定義 ---
+    // --- 關卡資料庫 ---
     const levels = [
         {
-            id: 1,
             title: "第一關",
             description: "預設的區塊元素是上下排列的。請使用屬性讓這三張卡片「橫向一排」吧！",
-            hint: "試試看設定主軸方向的屬性：flex-direction: row;",
+            hint: "試試看設定主軸方向：flex-direction: row; (註：Flex 預設即為 row，你可以直接輸入這行體驗，或直接點檢查看看過關條件)",
             cardsCount: 3,
-            // 驗證過關的條件：檢查容器的最終 CSS 樣式
+            initStyles: { flexDirection: "column" }, // 故意先直排讓學生切換
             validate: (computedStyle) => computedStyle.flexDirection === "row"
         },
         {
-            id: 2,
             title: "第二關",
             description: "太棒了！接下來請讓這三張橫排的卡片，在畫布中「水平置中」對齊。",
-            hint: "控制「主軸（目前是水平軸）對齊」的屬性是 justify-content。想想看置中要填什麼值？",
+            hint: "控制「主軸對齊」的屬性是 justify-content。想想看置中要填什麼值？",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.justifyContent === "center"
         },
         {
-            id: 3,
             title: "第三關",
             description: "現在卡片已經水平置中了，請再加把勁，讓卡片也「垂直置中」吧！",
-            hint: "控制「交差軸（目前是垂直軸）對齊」的屬性是 align-items。",
+            hint: "控制「交差軸對齊」的屬性是 align-items。請確保主軸是水平的喔。",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.alignItems === "center"
         },
         {
-            id: 4,
             title: "第四關",
             description: "轉個彎吧！請將主軸方向改成「直向排列」，讓卡片轉為垂直由上往下排。",
             hint: "主軸方向由 flex-direction 控制，直向的值是 column。",
@@ -248,9 +401,8 @@
             validate: (computedStyle) => computedStyle.flexDirection === "column"
         },
         {
-            id: 5,
             title: "第五關",
-            description: "大魔王來了！這裡有 5 張卡片，寬度已經超出容器了。請設定讓卡片在空間不足時「自動換行」。",
+            description: "大魔王來了！這裡有 5 張卡片。請設定讓卡片在畫布空間不足時「自動換行」。",
             hint: "控制換行的屬性是 flex-wrap，請讓它允許換行（wrap）。",
             cardsCount: 5,
             validate: (computedStyle) => computedStyle.flexWrap === "wrap"
@@ -258,53 +410,57 @@
     ];
 
     let currentLevelIndex = 0;
+    const completedLevels = new Set(); // 記錄完成的關卡
 
-    // --- 初始化遊戲 ---
+    // --- 初始化 ---
     function initGame() {
         renderNav();
         loadLevel(currentLevelIndex);
     }
 
-    // 渲染關卡導覽列
     function renderNav() {
         const nav = document.getElementById("levelNav");
         nav.innerHTML = "";
         levels.forEach((lvl, index) => {
             const btn = document.createElement("button");
-            btn.className = `level-btn ${index === currentLevelIndex ? 'active' : ''}`;
+            let className = 'level-btn';
+            if (index === currentLevelIndex) className += ' active';
+            if (completedLevels.has(index)) className += ' completed';
+            
+            btn.className = className;
             btn.innerText = lvl.title;
             btn.onclick = () => switchLevel(index);
             nav.appendChild(btn);
         });
     }
 
-    // 載入指定關卡
     function loadLevel(index) {
         currentLevelIndex = index;
         const level = levels[index];
         
-        // 更新導覽列狀態
         renderNav();
         
-        // 更新目標描述與隱藏提示
+        // 更新目標描述
+        document.getElementById("levelTitle").innerText = level.title;
         document.getElementById("targetDescription").innerText = level.description;
         const hintBox = document.getElementById("hintBox");
         hintBox.innerText = level.hint;
         hintBox.style.display = "none";
         
-        // 清空輸入框與重設畫布
+        // 重設輸入與按鈕狀態
         document.getElementById("cssInput").value = "";
+        resetCheckBtn();
         
         const container = document.getElementById("flex-container");
-        container.removeAttribute("style"); // 移除上一次留下的 inline style
-        container.style.display = "flex";  // 確保維持 flex 佈局
+        container.removeAttribute("style");
+        container.style.display = "flex"; // 強制維持 flex
         
-        // 根據關卡設定，第一關故意先切換成直向，讓學生體驗橫排的威力
-        if(level.id === 1) {
-            container.style.flexDirection = "column";
+        // 套用關卡初始特殊樣式 (例如第一關故意直排)
+        if (level.initStyles) {
+            Object.assign(container.style, level.initStyles);
         }
 
-        // 動態產生卡片
+        // 產生卡片
         container.innerHTML = "";
         for (let i = 1; i <= level.cardsCount; i++) {
             const card = document.createElement("div");
@@ -314,49 +470,165 @@
         }
     }
 
-    // 切換關卡
     function switchLevel(index) {
+        if (document.getElementById("finalOverlay").classList.contains("show")) return; // 通關中不可切換
         loadLevel(index);
     }
 
-    // 切換提示顯示狀態
     function toggleHint() {
         const hintBox = document.getElementById("hintBox");
-        hintBox.style.display = hintBox.style.display === "none" ? "block" : "none";
+        const isHidden = window.getComputedStyle(hintBox).display === "none";
+        
+        hintBox.style.display = isHidden ? "block" : "none";
+        
+        // [新增] 點擊提示時重設檢查按鈕狀態
+        resetCheckBtn();
     }
 
-    // 檢查答案是否正確
+    // 重設檢查按鈕為正常樣式
+    function resetCheckBtn() {
+        const btn = document.getElementById("checkBtn");
+        btn.className = "action-btn check-btn";
+        document.getElementById("checkIcon").innerText = "✅";
+        document.getElementById("checkText").innerText = "檢查答案";
+    }
+
+    // --- 核心驗證與特效邏輯 ---
     function checkAnswer() {
         const inputCode = document.getElementById("cssInput").value;
         const container = document.getElementById("flex-container");
+        const btn = document.getElementById("checkBtn");
+        const icon = document.getElementById("checkIcon");
+        const text = document.getElementById("checkText");
         
         try {
-            // 將學生輸入的文字，動態寫入容器的 style 屬性中
-            container.style.cssText = "display: flex; " + inputCode;
-            
-            // 取得瀏覽器實際解析後的 CSS 樣式
-            const computedStyle = window.getComputedStyle(container);
+            // 抓取原本的 inline style (保留必要的 display:flex 和 initStyle)
             const currentLevel = levels[currentLevelIndex];
+            container.style.cssText = "display: flex;";
+            if (currentLevel.initStyles) Object.assign(container.style, currentLevel.initStyles);
             
-            // 呼叫關卡的驗證函式
+            // 疊加學生輸入的代碼
+            container.style.cssText += inputCode;
+            
+            // 取得實際樣式進行驗證
+            const computedStyle = window.getComputedStyle(container);
+            
             if (currentLevel.validate(computedStyle)) {
-                alert("恭喜！順利過關 🎉");
+                // 🎉 成功過關
+                completedLevels.add(currentLevelIndex);
+                renderNav();
                 
-                // 標記該關卡按鈕為完成（可選擴充）
-                if (currentLevelIndex < levels.length - 1) {
-                    loadLevel(currentLevelIndex + 1); // 自動跳下一關
-                } else {
-                    alert("太強了！你已經全數通關！畢業啦 🎓");
-                }
+                // 按鈕變金色 + 顯示成功狀態
+                btn.className = "action-btn check-btn success-glow";
+                icon.innerText = "🏆";
+                text.innerText = "成功破關！";
+
+                // 觸發單關點點紙花特效
+                createConfettiEffect();
+
+                // 延遲後進入下一關或結局
+                setTimeout(() => {
+                    if (currentLevelIndex < levels.length - 1) {
+                        loadLevel(currentLevelIndex + 1); // 自動跳下一關
+                    } else {
+                        triggerGrandFinale(); // 全數通關
+                    }
+                }, 1500); 
+
             } else {
-                alert("格式可能正確，但畫面還沒達到目標唷，再調整看看！提示能幫到你。");
+                // ❌ 畫面未達標準
+                btn.className = "action-btn check-btn error";
+                icon.innerText = "❌";
+                text.innerText = "畫面不對喔";
+                // 1秒後自動重設
+                setTimeout(resetCheckBtn, 1000);
             }
         } catch (e) {
-            alert("代碼語法好像有點小錯誤，請檢查是否漏了分號 ; 唷！");
+            // ⚠️ 語法錯誤
+            btn.className = "action-btn check-btn error";
+            icon.innerText = "⚠️";
+            text.innerText = "語法錯誤";
+            setTimeout(resetCheckBtn, 1000);
         }
     }
 
-    // 當網頁載入完成，立刻啟動遊戲
+    // --- ✨ 特效函式庫 ---
+
+    // 1. [新增] 單關彩色紙花特效
+    function createConfettiEffect() {
+        const panel = document.querySelector('.visual-panel');
+        const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#a855f7'];
+        
+        for (let i = 0; i < 30; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.left = (Math.random() * 80 + 10) + '%'; // 隨機水平位置 (10%-90%)
+            confetti.style.top = '-10px'; // 從上方掉落
+            
+            // 隨機動畫參數
+            confetti.style.animationDelay = (Math.random() * 0.5) + 's';
+            
+            panel.appendChild(confetti);
+            
+            // 動畫結束後移除元素
+            confetti.addEventListener('animationend', () => confetti.remove());
+        }
+    }
+
+    // 2. [新增] 全數通關華麗大煙火與遮罩層
+    function triggerGrandFinale() {
+        const overlay = document.getElementById("finalOverlay");
+        overlay.classList.add("show");
+        
+        // 連續放 10 個煙火
+        for (let i = 0; i < 12; i++) {
+            setTimeout(createFirework, i * 300);
+        }
+    }
+
+    // 產生單個全螢幕煙火爆裂
+    function createFirework() {
+        const overlay = document.getElementById("finalOverlay");
+        const colors = ['#f59e0b', '#fbbf24', '#fff', '#22c55e', '#3b82f6'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        // 隨機爆裂中心點
+        const centerX = (Math.random() * 80 + 10) + '%';
+        const centerY = (Math.random() * 60 + 20) + '%';
+        
+        // 一個煙火由 30 個粒子組成
+        for (let i = 0; i < 35; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'firework';
+            particle.style.backgroundColor = color;
+            particle.style.left = centerX;
+            particle.style.top = centerY;
+            particle.style.boxShadow = `0 0 10px ${color}`;
+            
+            // 隨機爆裂方向與距離 (CSS 變數)
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 150 + 50;
+            particle.style.setProperty('--tw-x', Math.cos(angle) * distance + 'px');
+            particle.style.setProperty('--tw-y', Math.sin(angle) * distance + 'px');
+            
+            // 隨機動畫時間與延遲
+            particle.style.animationDuration = (Math.random() * 1 + 1) + 's';
+            
+            overlay.appendChild(particle);
+            
+            particle.addEventListener('animationend', () => particle.remove());
+        }
+    }
+
+    function resetGame() {
+        // 移除通關遮罩
+        document.getElementById("finalOverlay").classList.remove("show");
+        // 清空完成記錄並重設
+        completedLevels.clear();
+        loadLevel(0);
+    }
+
     window.onload = initGame;
 </script>
 
