@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 5關大闖關 V2.3 - 完美優化版！</title>
+    <title>Flexbox 5關大闖關 V2.4 - Bug修復完美版！</title>
     <style>
         /* --- 基礎版面與配色 --- */
         :root {
@@ -27,7 +27,6 @@
             min-height: 100vh;
         }
 
-        /* 遊戲主容器 */
         .container {
             width: 100%;
             max-width: 1100px;
@@ -47,7 +46,6 @@
             font-size: 2.2em;
         }
         
-        /* --- 關卡導覽 --- */
         .level-nav {
             display: flex;
             justify-content: center;
@@ -79,7 +77,6 @@
             color: var(--success-color);
         }
 
-        /* --- 遊戲主區塊 --- */
         .game-area {
             display: flex;
             gap: 30px;
@@ -88,7 +85,6 @@
             .game-area { flex-direction: column; }
         }
         
-        /* 左側控制面板 */
         .control-panel {
             flex: 1;
             display: flex;
@@ -116,7 +112,6 @@
             line-height: 1.5;
         }
         
-        /* CSS 輸入區域 */
         .code-container {
             background: var(--code-bg);
             color: #d4d4d4;
@@ -142,7 +137,6 @@
             outline: none;
         }
 
-        /* 按鈕群組 */
         .btn-group {
             display: flex;
             gap: 15px;
@@ -168,7 +162,6 @@
         .check-btn.error { background-color: var(--danger-color); animation: shake 0.4s; }
         .check-btn.success-glow { background: linear-gradient(45deg, #f59e0b, #fbbf24); }
 
-        /* 右側畫布預覽區 */
         .visual-panel {
             flex: 1;
             background: #f8fafc;
@@ -180,7 +173,6 @@
         }
         #flex-container { width: 100%; height: 100%; box-sizing: border-box; padding: 15px; display: flex; }
 
-        /* 卡片樣式 */
         .card {
             width: 90px; height: 90px; margin: 8px; color: white; font-weight: 800; font-size: 32px;
             display: flex; justify-content: center; align-items: center; border-radius: 12px;
@@ -193,14 +185,12 @@
         .card-4 { background: linear-gradient(135deg, #f97316, #c2410c); }
         .card-5 { background: linear-gradient(135deg, #14b8a6, #0f766e); }
 
-        /* --- 錯誤按鈕抖動 --- */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-8px); }
             75% { transform: translateX(8px); }
         }
 
-        /* --- 單關彩色小紙花 --- */
         .confetti {
             position: absolute; width: 10px; height: 10px; border-radius: 50%;
             animation: confettiFall 1.5s ease-out forwards; opacity: 0; z-index: 10;
@@ -210,7 +200,6 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- 🎉 通關祝賀佈局樣式 --- */
         .ending-view {
             width: 100vw;
             height: 100vh;
@@ -243,7 +232,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* 獨立大煙火粒子 */
         .ending-firework {
             position: absolute; width: 6px; height: 6px; border-radius: 50%;
             animation: fireworkSpread 1.8s ease-out forwards;
@@ -256,9 +244,8 @@
 </head>
 <body>
 
-<!-- 遊戲主場景 -->
 <div class="container" id="mainGameContainer">
-    <h1>Flexbox 5關大闖關 V2.3</h1>
+    <h1>Flexbox 5關大闖關 V2.4</h1>
     <div class="level-nav" id="levelNav"></div>
 
     <div class="game-area">
@@ -291,7 +278,6 @@
 </div>
 
 <script>
-    // --- 關卡資料庫 ---
     const levels = [
         {
             title: "第一關",
@@ -304,7 +290,6 @@
         {
             title: "第二關",
             description: "太棒了！接下來請讓這三張橫排的卡片，在畫布中「水平置中」對齊。",
-            // [已透露 center 關鍵字]
             hint: "控制「主軸對齊」的屬性是 justify-content。既然要置中，請試試看把值設定為關鍵字「center」吧！",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.justifyContent === "center"
@@ -312,7 +297,6 @@
         {
             title: "第三關",
             description: "現在卡片已經水平置中了，請再加把勁，讓卡片也「垂直置中」吧！",
-            // [已透露 center 關鍵字]
             hint: "控制「交差軸對齊」的屬性是 align-items。同樣地，請將它的值也設定為關鍵字「center」唷！",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.alignItems === "center"
@@ -337,7 +321,6 @@
     const completedLevels = new Set(); 
     let fireworkTimer = null; 
 
-    // --- 初始化 ---
     function initGame() {
         renderNav();
         loadLevel(currentLevelIndex);
@@ -404,7 +387,6 @@
         document.getElementById("checkText").innerText = "檢查答案";
     }
 
-    // --- 核心驗證 ---
     function checkAnswer() {
         const inputCode = document.getElementById("cssInput").value;
         const container = document.getElementById("flex-container");
@@ -452,7 +434,6 @@
         }
     }
 
-    // 單關小紙花
     function createConfettiEffect() {
         const panel = document.querySelector('.visual-panel');
         const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#a855f7'];
@@ -464,16 +445,14 @@
             confetti.style.top = '-10px';
             confetti.style.animationDelay = (Math.random() * 0.4) + 's';
             panel.appendChild(confetti);
-            onfetti.addEventListener('animationend', () => confetti.remove());
+            // 【已修正】將原本錯誤的 onfetti 改回正確的 confetti
+            confetti.addEventListener('animationend', () => confetti.remove());
         }
     }
 
-    // --- 🎉 獨立且乾淨的通關結局畫面 ---
     function triggerCleanEndingView() {
-        // 1. 直接隱藏原本裝載遊戲的整個主頁面容器，徹底清除原有的 DOM 佈局
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 2. 動態在 <body> 最底層建立一個全新的獨立全螢幕區塊
         const endingDiv = document.createElement("div");
         endingDiv.className = "ending-view";
         endingDiv.id = "cleanEndingView";
@@ -484,7 +463,6 @@
         `;
         document.body.appendChild(endingDiv);
 
-        // 3. 在這個完全乾淨、無捲軸的畫布中開心地連續發射大煙火
         let fireworkCount = 0;
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
@@ -493,7 +471,6 @@
         }, 300);
     }
 
-    // 在指定獨立容器中產生炫麗粒子煙火
     function createIndependentFirework(targetContainer) {
         if (!targetContainer) return;
         const colors = ['#f59e0b', '#fbbf24', '#ffffff', '#22c55e', '#3b82f6', '#ec4899'];
@@ -522,13 +499,10 @@
         }
     }
 
-    // 徹底重設遊戲，回到最初狀態
     function completelyResetGame() {
         if(fireworkTimer) clearInterval(fireworkTimer);
-        
         const endingView = document.getElementById("cleanEndingView");
         if (endingView) endingView.remove();
-        
         document.getElementById("mainGameContainer").style.display = "block";
         completedLevels.clear();
         loadLevel(0);
