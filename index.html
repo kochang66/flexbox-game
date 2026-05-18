@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 5關大闖關 V2.0 - 煙火加強版！</title>
+    <title>Flexbox 5關大闖關 V2.1 - 自動置頂煙火版！</title>
     <style>
         /* --- 基礎版面與配色 --- */
         :root {
@@ -131,12 +131,12 @@
             font-size: 15px;
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
         }
-        .code-prefix { color: #569cd6; } /* 屬性名稱顏色 */
+        .code-prefix { color: #569cd6; }
         textarea {
             width: 100%;
             height: 120px;
             background: #2d2d2d;
-            color: #ce9178; /* 屬性值顏色 */
+            color: #ce9178;
             border: 1px solid #444;
             border-radius: 6px;
             padding: 12px;
@@ -150,13 +150,13 @@
         }
         textarea:focus { border-color: var(--primary-color); }
 
-        /* 按鈕群組 (修正排版與樣式) */
+        /* 按鈕群組 */
         .btn-group {
             display: flex;
             gap: 15px;
         }
         button.action-btn {
-            flex: 1; /* 兩個按鈕平分寬度 */
+            flex: 1;
             padding: 14px;
             border: none;
             border-radius: 10px;
@@ -171,15 +171,15 @@
         }
         button.action-btn:active { transform: scale(0.98); }
 
-        /* [修改] 提示按鈕也改為白色文字 */
+        /* 提示按鈕（藍底白字） */
         .hint-btn { 
-            background: var(--primary-color); /* 改為藍色 */
-            color: white; /* 白色文字 */
+            background: var(--primary-color);
+            color: white;
             box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
         }
         .hint-btn:hover { background-color: #2563eb; }
 
-        /* 檢查按鈕 */
+        /* 檢查按鈕（綠底白字） */
         .check-btn { 
             background: var(--success-color); 
             color: white; 
@@ -193,7 +193,7 @@
             animation: shake 0.4s;
         }
         
-        /* 成功通關特效樣式 (金色按鈕) */
+        /* 成功通關特效樣式（金色耀眼按鈕） */
         .check-btn.success-glow {
             background: linear-gradient(45deg, #f59e0b, #fbbf24);
             box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
@@ -207,7 +207,7 @@
             border-radius: 12px;
             min-height: 400px;
             position: relative;
-            display: flex; /* 確保容器撐滿 */
+            display: flex;
         }
         
         /* Flexbox 容器 */
@@ -216,10 +216,10 @@
             height: 100%;
             box-sizing: border-box;
             padding: 15px;
-            display: flex; /* 遊戲核心 */
+            display: flex;
         }
 
-        /* 卡片樣式 */
+        /* 卡片基本樣式 */
         .card {
             width: 90px;
             height: 90px;
@@ -232,10 +232,9 @@
             align-items: center;
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            transition: all 0.3s ease; /* 讓卡片移動時有動畫 */
+            transition: all 0.3s ease;
             position: relative;
         }
-        /* 讓卡片數字更有質感 */
         .card::after {
             content: '';
             position: absolute;
@@ -251,14 +250,14 @@
 
         /* --- ✨ 動畫與特效 CSS --- */
         
-        /* 1. 按鈕抖動動畫 (錯誤時) */
+        /* 1. 錯誤按鈕抖動 */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-8px); }
             75% { transform: translateX(8px); }
         }
 
-        /* 2. 🎉 破關點點紙花特效 (單關) */
+        /* 2. 單關慶祝小紙花 */
         .confetti {
             position: absolute;
             width: 10px;
@@ -273,7 +272,7 @@
             100% { transform: translateY(200px) scale(0.5); opacity: 0; }
         }
 
-        /* 3. 🎓 全數通關超級大煙火特效 */
+        /* 3. 全數通關黑底遮罩層 */
         .grand-finale-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -286,7 +285,7 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.5s ease;
-            color: #fbbf24; /* 金色 */
+            color: #fbbf24;
             text-align: center;
         }
         .grand-finale-overlay.show { opacity: 1; visibility: visible; }
@@ -304,7 +303,7 @@
             box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
         }
 
-        /* 煙火花朵樣式 */
+        /* 煙火粒子 */
         .firework {
             position: absolute;
             width: 5px; height: 5px;
@@ -315,7 +314,6 @@
             0% { transform: translate(0, 0); opacity: 1; width: 5px; height: 5px;}
             100% { transform: translate(var(--tw-x), var(--tw-y)); opacity: 0; width: 2px; height: 2px;}
         }
-
     </style>
 </head>
 <body>
@@ -325,11 +323,10 @@
     <h2>🏆 恭喜畢業啦！</h2>
     <p>你已經完美掌握了核心 Flexbox 語法！</p>
     <button class="replay-btn" onclick="resetGame()">再玩一次 🔄</button>
-    <!-- 煙火會由 JS 動態貼在這裡 -->
 </div>
 
 <div class="container">
-    <h1>Flexbox 5關大闖關 V2.0</h1>
+    <h1>Flexbox 5關大闖關 V2.1</h1>
     
     <div class="level-nav" id="levelNav"></div>
 
@@ -349,11 +346,9 @@
             </div>
 
             <div class="btn-group">
-                <!-- [修改] 提示按鈕圖示與樣式 -->
                 <button class="action-btn hint-btn" onclick="toggleHint()">
                     <span>💡</span> 快速提示
                 </button>
-                <!-- 檢查按鈕圖示 -->
                 <button class="action-btn check-btn" id="checkBtn" onclick="checkAnswer()">
                     <span id="checkIcon">✅</span> <span id="checkText">檢查答案</span>
                 </button>
@@ -376,7 +371,7 @@
             description: "預設的區塊元素是上下排列的。請使用屬性讓這三張卡片「橫向一排」吧！",
             hint: "試試看設定主軸方向：flex-direction: row; (註：Flex 預設即為 row，你可以直接輸入這行體驗，或直接點檢查看看過關條件)",
             cardsCount: 3,
-            initStyles: { flexDirection: "column" }, // 故意先直排讓學生切換
+            initStyles: { flexDirection: "column" }, 
             validate: (computedStyle) => computedStyle.flexDirection === "row"
         },
         {
@@ -403,14 +398,14 @@
         {
             title: "第五關",
             description: "大魔王來了！這裡有 5 張卡片。請設定讓卡片在畫布空間不足時「自動換行」。",
-            hint: "控制換行的屬性是 flex-wrap，請讓它允許換行（wrap）。",
+            hint: "控制換行的屬性是 flex-wrap，請讓 it 允許換行（wrap）。",
             cardsCount: 5,
             validate: (computedStyle) => computedStyle.flexWrap === "wrap"
         }
     ];
 
     let currentLevelIndex = 0;
-    const completedLevels = new Set(); // 記錄完成的關卡
+    const completedLevels = new Set(); 
 
     // --- 初始化 ---
     function initGame() {
@@ -440,27 +435,23 @@
         
         renderNav();
         
-        // 更新目標描述
         document.getElementById("levelTitle").innerText = level.title;
         document.getElementById("targetDescription").innerText = level.description;
         const hintBox = document.getElementById("hintBox");
         hintBox.innerText = level.hint;
         hintBox.style.display = "none";
         
-        // 重設輸入與按鈕狀態
         document.getElementById("cssInput").value = "";
         resetCheckBtn();
         
         const container = document.getElementById("flex-container");
         container.removeAttribute("style");
-        container.style.display = "flex"; // 強制維持 flex
+        container.style.display = "flex"; 
         
-        // 套用關卡初始特殊樣式 (例如第一關故意直排)
         if (level.initStyles) {
             Object.assign(container.style, level.initStyles);
         }
 
-        // 產生卡片
         container.innerHTML = "";
         for (let i = 1; i <= level.cardsCount; i++) {
             const card = document.createElement("div");
@@ -471,21 +462,17 @@
     }
 
     function switchLevel(index) {
-        if (document.getElementById("finalOverlay").classList.contains("show")) return; // 通關中不可切換
+        if (document.getElementById("finalOverlay").classList.contains("show")) return; 
         loadLevel(index);
     }
 
     function toggleHint() {
         const hintBox = document.getElementById("hintBox");
         const isHidden = window.getComputedStyle(hintBox).display === "none";
-        
         hintBox.style.display = isHidden ? "block" : "none";
-        
-        // [新增] 點擊提示時重設檢查按鈕狀態
         resetCheckBtn();
     }
 
-    // 重設檢查按鈕為正常樣式
     function resetCheckBtn() {
         const btn = document.getElementById("checkBtn");
         btn.className = "action-btn check-btn";
@@ -502,49 +489,38 @@
         const text = document.getElementById("checkText");
         
         try {
-            // 抓取原本的 inline style (保留必要的 display:flex 和 initStyle)
             const currentLevel = levels[currentLevelIndex];
             container.style.cssText = "display: flex;";
             if (currentLevel.initStyles) Object.assign(container.style, currentLevel.initStyles);
             
-            // 疊加學生輸入的代碼
             container.style.cssText += inputCode;
-            
-            // 取得實際樣式進行驗證
             const computedStyle = window.getComputedStyle(container);
             
             if (currentLevel.validate(computedStyle)) {
-                // 🎉 成功過關
                 completedLevels.add(currentLevelIndex);
                 renderNav();
                 
-                // 按鈕變金色 + 顯示成功狀態
                 btn.className = "action-btn check-btn success-glow";
                 icon.innerText = "🏆";
                 text.innerText = "成功破關！";
 
-                // 觸發單關點點紙花特效
                 createConfettiEffect();
 
-                // 延遲後進入下一關或結局
                 setTimeout(() => {
                     if (currentLevelIndex < levels.length - 1) {
-                        loadLevel(currentLevelIndex + 1); // 自動跳下一關
+                        loadLevel(currentLevelIndex + 1); 
                     } else {
-                        triggerGrandFinale(); // 全數通關
+                        triggerGrandFinale(); // 觸發大通關（內含自動滾動置頂）
                     }
                 }, 1500); 
 
             } else {
-                // ❌ 畫面未達標準
                 btn.className = "action-btn check-btn error";
                 icon.innerText = "❌";
                 text.innerText = "畫面不對喔";
-                // 1秒後自動重設
                 setTimeout(resetCheckBtn, 1000);
             }
         } catch (e) {
-            // ⚠️ 語法錯誤
             btn.className = "action-btn check-btn error";
             icon.innerText = "⚠️";
             text.innerText = "語法錯誤";
@@ -552,9 +528,9 @@
         }
     }
 
-    // --- ✨ 特效函式庫 ---
+    // --- ✨ 特效功能區 ---
 
-    // 1. [新增] 單關彩色紙花特效
+    // 1. 單關過關彩色小紙花
     function createConfettiEffect() {
         const panel = document.querySelector('.visual-panel');
         const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#a855f7'];
@@ -563,41 +539,38 @@
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.left = (Math.random() * 80 + 10) + '%'; // 隨機水平位置 (10%-90%)
-            confetti.style.top = '-10px'; // 從上方掉落
-            
-            // 隨機動畫參數
+            confetti.style.left = (Math.random() * 80 + 10) + '%'; 
+            confetti.style.top = '-10px';
             confetti.style.animationDelay = (Math.random() * 0.5) + 's';
             
             panel.appendChild(confetti);
-            
-            // 動畫結束後移除元素
             confetti.addEventListener('animationend', () => confetti.remove());
         }
     }
 
-    // 2. [新增] 全數通關華麗大煙火與遮罩層
+    // 2. 全數通關大禮花（新增平滑置頂滾動邏輯）
     function triggerGrandFinale() {
+        // 【核心優化】自動平滑滾動至網頁最頂端，確保全螢幕煙火不會因為滾動條在底部而被切掉
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         const overlay = document.getElementById("finalOverlay");
         overlay.classList.add("show");
         
-        // 連續放 10 個煙火
+        // 連續施放 12 枚大煙火
         for (let i = 0; i < 12; i++) {
             setTimeout(createFirework, i * 300);
         }
     }
 
-    // 產生單個全螢幕煙火爆裂
+    // 產生單個隨機煙火爆裂
     function createFirework() {
         const overlay = document.getElementById("finalOverlay");
         const colors = ['#f59e0b', '#fbbf24', '#fff', '#22c55e', '#3b82f6'];
         const color = colors[Math.floor(Math.random() * colors.length)];
         
-        // 隨機爆裂中心點
         const centerX = (Math.random() * 80 + 10) + '%';
         const centerY = (Math.random() * 60 + 20) + '%';
         
-        // 一個煙火由 30 個粒子組成
         for (let i = 0; i < 35; i++) {
             const particle = document.createElement('div');
             particle.className = 'firework';
@@ -606,25 +579,20 @@
             particle.style.top = centerY;
             particle.style.boxShadow = `0 0 10px ${color}`;
             
-            // 隨機爆裂方向與距離 (CSS 變數)
             const angle = Math.random() * Math.PI * 2;
             const distance = Math.random() * 150 + 50;
             particle.style.setProperty('--tw-x', Math.cos(angle) * distance + 'px');
             particle.style.setProperty('--tw-y', Math.sin(angle) * distance + 'px');
             
-            // 隨機動畫時間與延遲
             particle.style.animationDuration = (Math.random() * 1 + 1) + 's';
             
             overlay.appendChild(particle);
-            
             particle.addEventListener('animationend', () => particle.remove());
         }
     }
 
     function resetGame() {
-        // 移除通關遮罩
         document.getElementById("finalOverlay").classList.remove("show");
-        // 清空完成記錄並重設
         completedLevels.clear();
         loadLevel(0);
     }
