@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V2.7 - 豪華開場與畢業大禮花！</title>
+    <title>Flexbox 倉鼠大冒險 V2.9 - 漸層發光與完美無捲軸版！</title>
     <style>
         /* --- 基礎版面與配色 --- */
         :root {
@@ -27,6 +27,7 @@
             min-height: 100vh;
         }
 
+        /* 遊戲主容器 */
         .container {
             width: 100%;
             max-width: 1100px;
@@ -38,12 +39,17 @@
             box-sizing: border-box;
         }
 
+        /* [修改] 遊戲內標題：同步開場文字大小、採用炫麗漸層與發光特效 */
         h1 {
             text-align: center;
-            color: #d97706; 
+            font-size: 3.5em; /* 同步開場大小 */
+            font-weight: 800;
             margin-top: 0;
             margin-bottom: 25px;
-            font-size: 2.2em;
+            background: linear-gradient(135deg, #fbbf24, #d97706); /* 金橘漸層 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 12px rgba(217, 119, 6, 0.25)); /* 微微發光 */
         }
         
         /* --- 關卡導覽 --- */
@@ -68,7 +74,7 @@
             font-size: 0.95em;
         }
         .level-btn.active {
-            background-color: #d97706;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: white;
             border-color: #d97706;
             box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
@@ -100,17 +106,18 @@
             border-left: 6px solid #d97706;
             border-radius: 8px;
         }
-        .instruction-box h3 { margin: 0 0 10px 0; color: #d97706; }
+        .instruction-box h3 { margin: 0 0 10px 0; color: #d97706; font-size: 1.2em;}
         .instruction-box p { margin: 0; line-height: 1.6; font-size: 1.05em;}
 
         .hint-box {
-            background: #fef2f2;
+            background: #fffbeb;
             padding: 15px;
-            border-left: 6px solid var(--danger-color);
+            border-left: 6px solid var(--warning-color);
             border-radius: 8px;
-            color: #991b1b;
+            color: #92400e;
             display: none;
-            font-size: 0.95em;
+            font-size: 1.1em;
+            font-weight: 700; /* 讓提示文字更明顯 */
             line-height: 1.5;
         }
         
@@ -241,31 +248,35 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- ✨ 🚀 [全新功能] 炫麗開場歡迎畫面樣式 --- */
+        /* --- ✨ 🚀 炫麗開場歡迎畫面樣式 --- */
         .welcome-view {
             width: 100vw;
             height: 100vh;
-            background-color: #0b0f19; /* 太空極致深藍黑 */
+            background-color: #0b0f19; 
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             position: fixed;
             top: 0; left: 0;
-            z-index: 10000; /* 層級最高 */
-            overflow: hidden;
+            z-index: 10000; 
+            overflow: hidden; /* [修改] 杜絕開場畫面右側 Bar */
             transition: opacity 0.6s ease, visibility 0.6s ease;
+            opacity: 1;
+            visibility: visible;
         }
-        /* 開場畫面淡出動畫 */
         .welcome-view.fade-out {
             opacity: 0;
             visibility: hidden;
         }
         .welcome-view h1 {
             font-size: 3.5em;
-            color: #fbbf24;
-            text-shadow: 0 0 30px rgba(245,158,11,0.8);
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(245,158,11,0.4);
             margin-bottom: 10px;
+            font-weight: 800;
             animation: bounceIn 1.2s ease;
         }
         .welcome-view p {
@@ -274,7 +285,6 @@
             margin-bottom: 40px;
             letter-spacing: 2px;
         }
-        /* 開場畫面限定：並排跳動的萌寵展示區 */
         .welcome-hamsters {
             display: flex;
             gap: 15px;
@@ -289,7 +299,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             animation: hamsterFloat 2.5s ease-in-out infinite;
         }
-        /* 啟動按鈕霓虹光芒 */
         .start-adventure-btn {
             padding: 18px 45px;
             background: linear-gradient(135deg, #f59e0b, #d97706);
@@ -327,7 +336,7 @@
             position: fixed; 
             top: 0; left: 0;
             z-index: 9999;
-            overflow: hidden; 
+            overflow: hidden; /* [修改] 杜絕結束畫面右側 Bar */
         }
         .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
         .ending-view p { font-size: 1.6em; color: #ffffff; margin: 20px 0 40px 0; opacity: 0.9; }
@@ -358,12 +367,11 @@
 </head>
 <body>
 
-<!-- 🚀 [全新功能] 炫麗開場歡迎畫面 -->
+<!-- 🚀 炫麗開場歡迎畫面 -->
 <div class="welcome-view" id="welcomeStage">
     <h1>🐹 Flexbox 倉鼠大冒險！</h1>
     <p>—— 用排版魔法，幫萌寵找到完美的家 ——</p>
     
-    <!-- 倉鼠天團列隊歡迎 -->
     <div class="welcome-hamsters">
         <div class="ham-preview" style="background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0.0s;">🐹</div>
         <div class="ham-preview" style="background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.2s;">🐹💤</div>
@@ -377,6 +385,7 @@
 
 <!-- 遊戲主場景 -->
 <div class="container" id="mainGameContainer">
+    <!-- [修改] 遊戲內大標題同步漸層發光特效 -->
     <h1>🐹 Flexbox 倉鼠大冒險！</h1>
     <div class="level-nav" id="levelNav"></div>
 
@@ -418,11 +427,12 @@
         { avatar: "🧐🐹", name: "學霸" }
     ];
 
+    // [修改] 關卡資料庫：精準對齊指定的快速提示內容格式
     const levels = [
         {
             title: "第一關",
             description: "小倉鼠們預設是上下疊在一起的。請使用屬性讓這三隻倉鼠舒服地「橫向排成一列」吧！",
-            hint: "設定主軸方向：flex-direction: row; (註：Flex 預設即為 row，你可以直接點檢查看看過關條件喔)",
+            hint: "設定主軸「橫向排列」→ flex-direction: row;",
             cardsCount: 3,
             initStyles: { flexDirection: "column" }, 
             validate: (computedStyle) => computedStyle.flexDirection === "row"
@@ -430,28 +440,28 @@
         {
             title: "第二關",
             description: "太棒了！接下來請讓這三張橫排的倉鼠，在籠子裡「水平置中」對齊集合。",
-            hint: "控制「主軸對齊」的屬性是 justify-content。既然要置中，請試試看把值設定為關鍵字「center」吧！",
+            hint: "設定主軸「水平置中」→ justify-content: center;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.justifyContent === "center"
         },
         {
             title: "第三關",
             description: "現在倉鼠已經水平置中了，請再加把勁，讓牠們在上下高度也「垂直置中」吧！",
-            hint: "控制「交差軸對齊」的屬性是 align-items。同樣地，請將它的值也設定為關鍵字「center」唷！",
+            hint: "設定交錯軸「垂直置中」→ align-items: center;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.alignItems === "center"
         },
         {
             title: "第四關",
             description: "換個隊形！請將主軸方向改成「直向排列」，讓倉鼠們轉為垂直由上往下排成一縱隊。",
-            hint: "主軸方向由 flex-direction 控制，直向的值是 column。",
+            hint: "設定主軸「直向排列」→ flex-direction: column;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.flexDirection === "column"
         },
         {
             title: "第五關",
             description: "大魔王來了！這次來了 5 隻大倉鼠，籠子塞不下啦。請設定屬性讓空間不足時牠們能「自動換行」到下一排。",
-            hint: "控制換行的屬性是 flex-wrap，請讓它允許換行（wrap）。",
+            hint: "設定「自動換行」→ flex-wrap: wrap;",
             cardsCount: 5,
             validate: (computedStyle) => computedStyle.flexWrap === "wrap"
         }
@@ -466,15 +476,9 @@
         loadLevel(currentLevelIndex);
     }
 
-    // 🚀 [全新功能] 點擊開始冒險按鈕的觸發函式
     function startAdventure() {
         const stage = document.getElementById("welcomeStage");
-        stage.classList.add("fade-out"); // 加上 CSS 淡出特效
-        
-        // 等動畫演完 (600ms) 後，從 DOM 移除開場元素，釋放記憶體
-        setTimeout(() => {
-            stage.remove();
-        }, 600);
+        stage.classList.add("fade-out"); 
     }
 
     function renderNav() {
@@ -654,8 +658,18 @@
 
     function completelyResetGame() {
         if(fireworkTimer) clearInterval(fireworkTimer);
+        
         const endingView = document.getElementById("cleanEndingView");
         if (endingView) endingView.remove();
+        
+        const welcomeStage = document.getElementById("welcomeStage");
+        if (welcomeStage) {
+            welcomeStage.classList.remove("fade-out");
+        } else {
+            window.location.reload();
+            return;
+        }
+        
         document.getElementById("mainGameContainer").style.display = "block";
         completedLevels.clear();
         loadLevel(0);
