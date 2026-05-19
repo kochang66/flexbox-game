@@ -182,6 +182,7 @@
             min-height: 400px;
             display: flex;
             position: relative;
+            overflow: hidden; /* 防止過關小紙花溢出預覽區 */
         }
         #flex-container { width: 100%; height: 100%; box-sizing: border-box; padding: 15px; display: flex; }
 
@@ -202,6 +203,7 @@
             box-shadow: 0 6px 12px rgba(217,119,6,0.2);
             border: 3px solid #fff;
             animation: hamsterFloat 3s ease-in-out infinite;
+            z-index: 2;
         }
 
         .card-1 { background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0s; }
@@ -237,6 +239,28 @@
             padding: 1px 6px;
             border-radius: 10px;
             margin-top: 2px;
+        }
+
+        /* --- 錯誤按鈕抖動 --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* --- ✨ [修復核心] 單關答對：彩色碎紙花飄落特效樣式 --- */
+        .confetti {
+            position: absolute; 
+            width: 12px; 
+            height: 12px; 
+            border-radius: 30%;
+            z-index: 5;
+            pointer-events: none;
+            animation: confettiFallAnimation 1.5s ease-out forwards;
+        }
+        @keyframes confettiFallAnimation {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(420px) rotate(720deg); opacity: 0; }
         }
 
         /* --- 🚀 完美無捲軸・開場滿版常駐灑花舞台 --- */
@@ -309,14 +333,14 @@
             100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
         }
 
-        /* --- 🌸 霓虹微光粒子背景舞台 --- */
+        /* --- 🌸 霓虹微光粒子背景舞台（從最上方頂部灑到最下方） --- */
         .intro-blackout {
             width: 100vw;
             height: 100vh;
             background-color: transparent; 
             position: absolute;
             top: 0; left: 0;
-            z-index: 1; /* 位於最底層 */
+            z-index: 1; 
             overflow: hidden;
             pointer-events: none;
         }
@@ -329,12 +353,9 @@
             animation: snowFallAnimation linear forwards;
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
         }
-        
         @keyframes snowFallAnimation {
-            /* 🛠️ 【修改核心】起點改回頂端外部 -20px，讓花灑滿整個上半部 */
             0% { transform: translateY(-20px) translateX(0px) rotate(0deg) scale(0.3); opacity: 0; }
             10% { opacity: 1; }
-            /* 🛠️ 終點維持平滑降落到螢幕底部外部 */
             100% { transform: translateY(110vh) translateX(var(--snow-x)) rotate(360deg) scale(var(--snow-scale)); opacity: 0; }
         }
 
@@ -386,7 +407,6 @@
 <body>
 
 <div class="welcome-view" id="welcomeStage">
-    
     <div class="intro-blackout" id="introStage"></div>
 
     <h1 class="gradient-title">Flexbox 倉鼠大冒險！</h1>
@@ -483,7 +503,6 @@
     let fireworkTimer = null; 
     let snowInterval = null; 
 
-    // 🌌 粒子發射器（🛠️ 修正核心：回歸螢幕最上方邊緣連續向下鋪灑）
     function startPermanentSnow() {
         const stage = document.getElementById("introStage");
         if (!stage) return;
@@ -498,11 +517,9 @@
             const size = Math.random() * 18 + 6;
             flake.style.fontSize = size + "px";
             
-            // [修改核心] 回歸螢幕最上方邊緣隨機寬度發射
             flake.style.left = Math.random() * 100 + "vw";
             flake.style.top = "-20px"; 
             
-            // 粒子飄落時間微調 (2s ~ 3.5s) 更加沉浸唯美
             const duration = Math.random() * 1.5 + 2; 
             flake.style.animationDuration = duration + "s";
             
@@ -521,19 +538,18 @@
     function initGame() {
         renderNav();
         loadLevel(currentLevelIndex);
-        startPermanentSnow(); // 一進網頁，漫天頂部粒子雨立刻常駐灑落
+        startPermanentSnow(); 
     }
 
     function startAdventure() {
-        if(snowInterval) clearInterval(snowInterval); // 開始遊戲時停止產生選單粒子
+        if(snowInterval) clearInterval(snowInterval); 
         
         document.getElementById("welcomeStage").classList.add("fade-out"); 
         document.getElementById("mainGameContainer").style.display = "block";
         
-        // 🛠️ 解鎖：進入關卡解鎖右側拖拉 Bar
         document.documentElement.style.overflowY = "auto";
         document.body.style.overflowY = "auto";
-        document.body.style.backgroundColor = "#f0f4f8"; /* 換回主遊戲舒服淺色底 */
+        document.body.style.backgroundColor = "#f0f4f8"; 
     }
 
     function renderNav() {
@@ -623,7 +639,7 @@
                 icon.innerText = "🐹";
                 text.innerText = "倉鼠排好隊了！";
 
-                createConfettiEffect();
+                createConfettiEffect(); // 🎉 [修復成功] 呼叫修正後的碎紙花特效
 
                 setTimeout(() => {
                     if (currentLevelIndex < levels.length - 1) {
@@ -647,17 +663,28 @@
         }
     }
 
+    // 🎉 [修復核心] 單關破關彩色紙花特效優化（改為相對於預覽視窗動態向下飄落）
     function createConfettiEffect() {
         const panel = document.querySelector('.visual-panel');
-        const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
-        for (let i = 0; i < 25; i++) {
+        if (!panel) return;
+
+        const colors = ['#ff8787', '#74c0fc', '#da77f2', '#ffd43b', '#63e6be', '#ffb7c5'];
+        for (let i = 0; i < 30; i++) {
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
+            
+            // 隨機碎花顏色、尺寸與水平落點
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.left = (Math.random() * 80 + 10) + '%'; 
+            confetti.style.left = (Math.random() * 90 + 5) + '%'; 
             confetti.style.top = '-10px';
-            confetti.style.animationDelay = (Math.random() * 0.4) + 's';
+            
+            // 錯開每片小碎花的演繹時間差
+            const delay = Math.random() * 0.4;
+            confetti.style.animationDelay = delay + 's';
+            
             panel.appendChild(confetti);
+
+            // 當 CSS 的動畫結束（animationend）後，自動把 DOM 清乾淨
             confetti.addEventListener('animationend', () => confetti.remove());
         }
     }
@@ -665,7 +692,6 @@
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 🔒 結局鎖死無 Bar 狀態
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
@@ -712,7 +738,6 @@
         }
     }
 
-    // 🔄 點擊再玩一次，秒跳回完美的「全螢幕頂部灑花開場畫面」！
     function completelyResetGame() {
         if(fireworkTimer) clearInterval(fireworkTimer); 
         if(snowInterval) clearInterval(snowInterval); 
@@ -726,16 +751,14 @@
         }
         
         document.getElementById("mainGameContainer").style.display = "none";
-        document.body.style.backgroundColor = "#0b0f19"; /* 換回太空深藍黑底色 */
+        document.body.style.backgroundColor = "#0b0f19"; 
         
-        // 🔒 重新鎖死開場拖拉 Bar
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
         
         completedLevels.clear();
         loadLevel(0);
         
-        // 重新喚醒無限頂部粒子雨，重返最震撼的開場
         startPermanentSnow();
     }
 
