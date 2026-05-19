@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V3.7 - 獨立物體開場特效版！</title>
+    <title>Flexbox 倉鼠大冒險 V3.8 - 豪華開場動畫與重置完美版！</title>
     <style>
         /* --- 🔒 全局初始化鎖定，避免開場閃爍滾動條 --- */
         html, body {
@@ -37,7 +37,7 @@
             display: none; 
         }
 
-        /* --- ✨ 標題：純黃色漸層，移除行內圖示，區塊渲染 --- */
+        /* --- ✨ 標題：純黃色漸層，區塊渲染 --- */
         h1.gradient-title {
             text-align: center;
             font-size: 3.5em; 
@@ -46,13 +46,10 @@
             margin-bottom: 25px;
             display: block; 
             width: 100%;
-            
-            /* 精準對齊圖片中的暖黃、正黃、橘黃漸層 */
             background: linear-gradient(135deg, #ffe066 0%, #f59e0b 50%, #d97706 100%) !important;
             background-clip: text !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important; 
-            
             filter: drop-shadow(0 4px 10px rgba(217, 119, 6, 0.35)); 
         }
         
@@ -241,9 +238,26 @@
             margin-top: 2px;
         }
 
-        /* --- 🚀 [全新設計] 雙重開場畫面機制 --- */
+        /* --- 錯誤按鈕抖動 --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* --- 單關彩色小紙花 --- */
+        .confetti {
+            position: absolute; width: 10px; height: 10px; border-radius: 50%;
+            animation: confettiFall 1.5s ease-out forwards; opacity: 0; z-index: 10;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(150px) scale(0.5); opacity: 0; }
+        }
+
+        /* --- 🚀 雙重開場視覺舞台 --- */
         
-        /* 第一層：純物體登場特效舞台 (防止全局旋轉造成頭暈) */
+        /* [大幅炫麗化] 第一層：魔幻葵瓜子種子縮放旋轉大舞台 */
         .intro-blackout {
             width: 100vw;
             height: 100vh;
@@ -255,19 +269,28 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            box-sizing: border-box;
         }
+        /* 炫麗核心：自帶霓虹呼吸光圈的金色星星物件 */
         .intro-object {
-            font-size: 80px; /* 華麗的大金色星星種子 */
-            filter: drop-shadow(0 0 20px #fbbf24);
-            animation: objectPopRotate 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            font-size: 90px; 
+            cursor: default;
+            user-select: none;
+            filter: drop-shadow(0 0 30px #f59e0b);
+            /* 綁定強烈的瘋狂縮放旋轉加發光動畫 */
+            animation: superIntroAnimation 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
-        @keyframes objectPopRotate {
-            0% { transform: scale(0) rotate(-360deg); opacity: 0; }
-            70% { transform: scale(1.3) rotate(20deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        @keyframes superIntroAnimation {
+            0% { transform: scale(0) rotate(-540deg); filter: drop-shadow(0 0 5px #f59e0b); opacity: 0; }
+            50% { transform: scale(1.5) rotate(-180deg); filter: drop-shadow(0 0 50px #ffe066); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 25px #d97706); opacity: 1; }
         }
-        .intro-blackout.fade-away { opacity: 0; visibility: hidden; }
+        /* 用 JS 控制淡出，平滑柔和 */
+        .intro-blackout.fade-away { 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
 
         /* 第二層：安靜舒服的歡迎選單畫面 */
         .welcome-view {
@@ -281,9 +304,9 @@
             position: fixed;
             top: 0; left: 0;
             z-index: 10000; 
-            overflow: hidden !important; /* 封印開場 Bar */
+            overflow: hidden !important; 
             box-sizing: border-box;
-            opacity: 0; /* 初始先藏著，等第一層秀完才浮現 */
+            opacity: 0; 
             visibility: hidden;
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
@@ -336,7 +359,7 @@
             position: fixed; 
             top: 0; left: 0;
             z-index: 9999;
-            overflow: hidden !important; /* 封印結局 Bar */
+            overflow: hidden !important; 
             box-sizing: border-box;
         }
         .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
@@ -371,8 +394,11 @@
 </head>
 <body>
 
-<div class="intro-blackout" id="introStage">
-    <div class="intro-object">🚀</div> </div>
+<div id="introWrapper">
+    <div class="intro-blackout" id="introStage">
+        <div class="intro-object">🌟</div> 
+    </div>
+</div>
 
 <div class="welcome-view" id="welcomeStage">
     <h1 class="gradient-title">Flexbox 倉鼠大冒險！</h1>
@@ -468,14 +494,13 @@
     const completedLevels = new Set(); 
     let fireworkTimer = null; 
 
-    // 🎬 分層開場動畫邏輯
+    // 🎬 獨立物體雙層開場動畫排程
     function playDualStageIntro() {
-        // 1. 讓火箭在中央帥氣縮放旋轉 1.2 秒
         setTimeout(() => {
-            // 火箭淡出
-            document.getElementById("introStage").classList.add("fade-away");
-            // 同步讓第二層「選單與黃色漸層字體」優雅浮現
-            document.getElementById("welcomeStage").classList.add("reveal-menu");
+            const stage = document.getElementById("introStage");
+            if (stage) stage.classList.add("fade-away"); // 第一層淡出
+            
+            document.getElementById("welcomeStage").classList.add("reveal-menu"); // 第二層選單浮現
         }, 1200);
     }
 
@@ -489,7 +514,7 @@
         document.getElementById("welcomeStage").classList.add("fade-out"); 
         document.getElementById("mainGameContainer").style.display = "block";
         
-        // 🛠️ 解鎖：進入遊戲進行關卡，釋放右側 Bar 供正常操作
+        // 解鎖：進入關卡，釋放右側 Bar 供正常往下滾動操作
         document.documentElement.style.overflowY = "auto";
         document.body.style.overflowY = "auto";
     }
@@ -637,7 +662,7 @@
         `;
         document.body.appendChild(endingDiv);
 
-        // 無限連續大煙火爆裂
+        // 無限連續發射大煙火
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
         }, 300);
@@ -671,17 +696,27 @@
         }
     }
 
+    // 🔄 【核心 Bug 修復機制】動態摧毀並重建開場，強迫動畫重新裝載播放
     function completelyResetGame() {
         if(fireworkTimer) clearInterval(fireworkTimer); 
         
         const endingView = document.getElementById("cleanEndingView");
         if (endingView) endingView.remove();
         
-        // 還原開場兩層結構
-        const introStage = document.getElementById("introStage");
+        // 🛠️ 【殺手鐧邏輯】徹底清除舊的、演完過的動畫舞台
+        const wrapper = document.getElementById("introWrapper");
+        wrapper.innerHTML = ""; 
+        
+        // 重新注入一個「完全乾淨、自帶初始 Animation」的新開場物件
+        const newStage = document.createElement("div");
+        newStage.className = "intro-blackout";
+        newStage.id = "introStage";
+        newStage.innerHTML = `<div class="intro-object">🌟</div>`;
+        wrapper.appendChild(newStage);
+        
+        // 恢復歡迎層的初始隱藏狀態
         const welcomeStage = document.getElementById("welcomeStage");
-        if (introStage && welcomeStage) {
-            introStage.classList.remove("fade-away");
+        if (welcomeStage) {
             welcomeStage.classList.remove("reveal-menu");
             welcomeStage.classList.remove("fade-out");
         }
@@ -695,7 +730,7 @@
         completedLevels.clear();
         loadLevel(0);
         
-        // 重新引導播放開場物體動畫
+        // 再次啟動排程，此時新裝載的 🌟 圖示會 100% 重新進行最華麗的縮放與旋轉！
         playDualStageIntro();
     }
 
