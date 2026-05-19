@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V3.2 - 漸層字體與精準滾動條優化版！</title>
+    <title>Flexbox 倉鼠大冒險 V3.3 - 絢彩漸層與無限煙火完美修復版！</title>
     <style>
-        /* --- 🔒 [核心優化] 初始化全局鎖定，避免開場閃爍滾動條 --- */
+        /* --- 🔒 全局初始化鎖定，避免開場閃爍滾動條 --- */
         html, body {
             overflow: hidden; 
             margin: 0;
@@ -24,7 +24,7 @@
             align-items: flex-start;
         }
 
-        /* 遊戲主容器：內部不限制，允許自由延伸 */
+        /* 遊戲主容器 */
         .container {
             width: 100%;
             max-width: 1100px;
@@ -34,27 +34,26 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             margin: 20px 10px;
             box-sizing: border-box;
-            display: none; /* 預設隱藏，點擊開始才顯示 */
+            display: none; 
         }
 
-        /* --- ✨ [修改] 標題：拿掉左側倉鼠，採用最高相容性的華麗彩色金橘漸層 --- */
-        .gradient-title {
+        /* --- ✨ [絕對修正] 炫彩漸層大標題（保證 100% 顯現） --- */
+        h1.gradient-title {
             text-align: center;
             font-size: 3.5em; 
             font-weight: 900;
             margin-top: 0;
             margin-bottom: 25px;
-            
-            /* 華麗金橘彩色漸層核心語法 */
-            background: #d97706; /* 瀏覽器不支援漸層時的替代色 */
-            background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 35%, #d97706 70%, #b45309 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            
-            display: block;
+            display: block; /* 核心修正：強制區塊渲染 */
             width: 100%;
-            filter: drop-shadow(0 4px 10px rgba(217, 119, 6, 0.3)); 
+            
+            /* 頂級彩色金橘漸層配置 */
+            background: linear-gradient(135deg, #ffe066 0%, #f59e0b 40%, #d97706 70%, #b45309 100%) !important;
+            background-clip: text !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important; /* 強制文字透明填色 */
+            
+            filter: drop-shadow(0 4px 10px rgba(217, 119, 6, 0.35)); 
         }
         
         /* --- 關卡導覽 --- */
@@ -271,7 +270,7 @@
             position: fixed;
             top: 0; left: 0;
             z-index: 10000; 
-            overflow: hidden !important; /* 強制封印開場 Bar */
+            overflow: hidden !important; 
             box-sizing: border-box;
         }
         .welcome-view.fade-out {
@@ -325,7 +324,7 @@
             position: fixed; 
             top: 0; left: 0;
             z-index: 9999;
-            overflow: hidden !important; /* 強制封印結局 Bar */
+            overflow: hidden !important; 
             box-sizing: border-box;
         }
         .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
@@ -337,12 +336,33 @@
             transition: all 0.2s;
             z-index: 10001; 
         }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- 🎆 [絕對修正] 結局獨立大煙火動畫軌跡樣式 --- */
+        .ending-firework {
+            position: absolute; 
+            width: 6px; 
+            height: 6px; 
+            border-radius: 50%;
+            /* 修正核心：與下方 JS 呼叫名稱與動畫軌跡精準對齊 */
+            animation: fireworkSpreadAnimation 1.8s ease-out forwards;
+        }
+        @keyframes fireworkSpreadAnimation {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--fx-x), var(--fx-y)); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
 <div class="welcome-view" id="welcomeStage">
-    <span class="gradient-title">Flexbox 倉鼠大冒險！</span>
+    <h1 class="gradient-title">Flexbox 倉鼠大冒險！</h1>
     <p>—— 用排版魔法，幫萌寵找到完美的家 ——</p>
     
     <div class="welcome-hamsters">
@@ -357,7 +377,7 @@
 </div>
 
 <div class="container" id="mainGameContainer">
-    <span class="gradient-title">Flexbox 倉鼠大冒險！</span>
+    <h1 class="gradient-title">Flexbox 倉鼠大冒險！</h1>
     <div class="level-nav" id="levelNav"></div>
 
     <div class="game-area">
@@ -441,12 +461,10 @@
     }
 
     function startAdventure() {
-        // 1. 隱藏歡迎大螢幕
         document.getElementById("welcomeStage").classList.add("fade-out"); 
-        // 2. 秀出主遊戲
         document.getElementById("mainGameContainer").style.display = "block";
         
-        // 🛠️ 【核心修復】進入遊戲後，將全局 overflow 釋放，右側拖拉 Bar 正式現身！
+        // 🛠️ 解鎖：釋放第一關到第五關的右側滾動條，確保玩家能自由往下拉
         document.documentElement.style.overflowY = "auto";
         document.body.style.overflowY = "auto";
     }
@@ -577,10 +595,11 @@
         }
     }
 
+    // 🎉 獨立結局畫面（無限大煙火爆裂）
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 🛠️ 【核心修復】進入結局畫面，再度強制鎖死全螢幕，收起拖拉 Bar！
+        // 🔒 鎖定：結局大畫面封印滾動條，保持整潔
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
@@ -588,12 +607,13 @@
         endingDiv.className = "ending-view";
         endingDiv.id = "cleanEndingView";
         endingDiv.innerHTML = `
-            <span class="gradient-title" style="font-size: 3.8em;">🏆 恭喜畢業啦！</span>
+            <h1 class="gradient-title" style="font-size: 3.8em; margin: 0;">🏆 恭喜畢業啦！</h1>
             <p>你已經完美掌握了核心 Flexbox 語法！</p>
             <button class="restart-btn" onclick="completelyResetGame()">再跟倉鼠玩一次 🔄</button>
         `;
         document.body.appendChild(endingDiv);
 
+        // 🎆 啟動：無限發射大煙火
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
         }, 300);
@@ -609,7 +629,7 @@
         
         for (let i = 0; i < 40; i++) {
             const particle = document.createElement('div');
-            particle.className = 'ending-firework';
+            particle.className = 'ending-firework'; // 呼叫對齊後的 CSS 屬性
             particle.style.backgroundColor = color;
             particle.style.left = centerX;
             particle.style.top = centerY;
@@ -640,7 +660,7 @@
         
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 重設時，再度回到最初開場的無 Bar 狀態
+        // 🔒 開場：重新鎖定無 Bar 狀態
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
         
