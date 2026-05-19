@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V3.1 - 炫彩漸層與無限煙火完美版！</title>
+    <title>Flexbox 倉鼠大冒險 V3.2 - 漸層字體與精準滾動條優化版！</title>
     <style>
-        /* --- 🔒 [核心黑科技] 徹底摧毀所有多餘的拖拉 Bar --- */
+        /* --- 🔒 [核心優化] 初始化全局鎖定，避免開場閃爍滾動條 --- */
         html, body {
-            overflow: hidden !important; /* 確保全局初始不出現捲軸 */
+            overflow: hidden; 
             margin: 0;
             padding: 0;
             width: 100vw;
@@ -24,7 +24,7 @@
             align-items: flex-start;
         }
 
-        /* 遊戲進入後的容器：允許內部正常滾動，但開場跟結尾不影響它 */
+        /* 遊戲主容器：內部不限制，允許自由延伸 */
         .container {
             width: 100%;
             max-width: 1100px;
@@ -34,22 +34,27 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             margin: 20px 10px;
             box-sizing: border-box;
-            display: none; /* 預設先隱藏，等點擊開始冒險才顯示 */
+            display: none; /* 預設隱藏，點擊開始才顯示 */
         }
 
-        /* --- ✨ [修改] 標題：每個字都呈現華麗彩色金橘漸層與霓虹發光 --- */
+        /* --- ✨ [修改] 標題：拿掉左側倉鼠，採用最高相容性的華麗彩色金橘漸層 --- */
         .gradient-title {
             text-align: center;
             font-size: 3.5em; 
             font-weight: 900;
             margin-top: 0;
             margin-bottom: 25px;
-            background: linear-gradient(135deg, #fcd34d, #f59e0b, #d97706, #b45309); /* 豐富的彩色金橘漸層 */
+            
+            /* 華麗金橘彩色漸層核心語法 */
+            background: #d97706; /* 瀏覽器不支援漸層時的替代色 */
+            background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 35%, #d97706 70%, #b45309 100%);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: inline-block;
+            
+            display: block;
             width: 100%;
-            filter: drop-shadow(0 4px 15px rgba(217, 119, 6, 0.45)); 
+            filter: drop-shadow(0 4px 10px rgba(217, 119, 6, 0.3)); 
         }
         
         /* --- 關卡導覽 --- */
@@ -183,7 +188,7 @@
         }
         #flex-container { width: 100%; height: 100%; box-sizing: border-box; padding: 15px; display: flex; }
 
-        /* --- 🐹 [修正] 活體動態倉鼠樣式：完美現身，絕對看得到大萌臉 --- */
+        /* --- 🐹 活體動態倉鼠樣式 --- */
         .card {
             width: 95px; 
             height: 95px; 
@@ -202,7 +207,6 @@
             animation: hamsterFloat 3s ease-in-out infinite;
         }
 
-        /* 賦予實體漸層底色 */
         .card-1 { background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0s; }
         .card-2 { background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.3s; }
         .card-3 { background: linear-gradient(135deg, #da77f2, #9c36b5); animation-delay: 0.6s; }
@@ -215,9 +219,8 @@
             100% { transform: translateY(0) scale(1); }
         }
 
-        /* 徹底放大並置中倉鼠符號，杜絕排版擠壓與遮擋 */
         .card .avatar {
-            font-size: 42px; /* 放大表情 */
+            font-size: 42px; 
             line-height: 1;
             margin: 0;
             padding: 0;
@@ -256,7 +259,7 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- 🚀 [修改] 完美無捲軸・開場歡迎畫面 --- */
+        /* --- 🚀 完美無捲軸・開場歡迎畫面 --- */
         .welcome-view {
             width: 100vw;
             height: 100vh;
@@ -268,7 +271,7 @@
             position: fixed;
             top: 0; left: 0;
             z-index: 10000; 
-            overflow: hidden !important; /* 絕對封印右側捲軸 */
+            overflow: hidden !important; /* 強制封印開場 Bar */
             box-sizing: border-box;
         }
         .welcome-view.fade-out {
@@ -309,12 +312,8 @@
             box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
             transition: all 0.2s ease;
         }
-        .start-adventure-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 35px rgba(245, 158, 11, 0.8);
-        }
 
-        /* --- 🎉 [修改] 完美無捲軸・畢業通關畫面 --- */
+        /* --- 🎉 完美無捲軸・畢業通關畫面 --- */
         .ending-view {
             width: 100vw;
             height: 100vh;
@@ -326,7 +325,7 @@
             position: fixed; 
             top: 0; left: 0;
             z-index: 9999;
-            overflow: hidden !important; /* 絕對封印右側捲軸 */
+            overflow: hidden !important; /* 強制封印結局 Bar */
             box-sizing: border-box;
         }
         .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
@@ -338,29 +337,12 @@
             transition: all 0.2s;
             z-index: 10001; 
         }
-        .restart-btn:hover { background-color: #16a34a; transform: translateY(-2px); }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); }
-            70% { transform: scale(0.9); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .ending-firework {
-            position: absolute; width: 6px; height: 6px; border-radius: 50%;
-            animation: fireworkSpread 1.8s ease-out forwards;
-        }
-        @keyframes fireworkSpread {
-            0% { transform: translate(0, 0); opacity: 1; }
-            100% { transform: translate(var(--fx-x), var(--fx-y)); opacity: 0; }
-        }
     </style>
 </head>
 <body>
 
 <div class="welcome-view" id="welcomeStage">
-    <span class="gradient-title">🐹 Flexbox 倉鼠大冒險！</span>
+    <span class="gradient-title">Flexbox 倉鼠大冒險！</span>
     <p>—— 用排版魔法，幫萌寵找到完美的家 ——</p>
     
     <div class="welcome-hamsters">
@@ -375,7 +357,7 @@
 </div>
 
 <div class="container" id="mainGameContainer">
-    <span class="gradient-title">🐹 Flexbox 倉鼠大冒險！</span>
+    <span class="gradient-title">Flexbox 倉鼠大冒險！</span>
     <div class="level-nav" id="levelNav"></div>
 
     <div class="game-area">
@@ -408,10 +390,8 @@
 </div>
 
 <script>
-    // 5隻大臉倉鼠表情包
     const hamsters = ["🐹", "🐹", "🐹", "🐹", "🐹"];
 
-    // 快速提示完全對齊功能
     const levels = [
         {
             title: "第一關",
@@ -461,11 +441,14 @@
     }
 
     function startAdventure() {
-        // 1. 開場動畫隱藏
+        // 1. 隱藏歡迎大螢幕
         document.getElementById("welcomeStage").classList.add("fade-out"); 
-        // 2. 顯示主遊戲畫面，並允許頁面因應主遊戲內容高度渲染
+        // 2. 秀出主遊戲
         document.getElementById("mainGameContainer").style.display = "block";
-        document.body.style.overflowY = "auto"; 
+        
+        // 🛠️ 【核心修復】進入遊戲後，將全局 overflow 釋放，右側拖拉 Bar 正式現身！
+        document.documentElement.style.overflowY = "auto";
+        document.body.style.overflowY = "auto";
     }
 
     function renderNav() {
@@ -594,10 +577,12 @@
         }
     }
 
-    // 🎉 獨立無 Bar 結局大畫面
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
-        document.body.style.overflow = "hidden"; // 強制鎖死結局滾動條
+        
+        // 🛠️ 【核心修復】進入結局畫面，再度強制鎖死全螢幕，收起拖拉 Bar！
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
 
         const endingDiv = document.createElement("div");
         endingDiv.className = "ending-view";
@@ -609,7 +594,6 @@
         `;
         document.body.appendChild(endingDiv);
 
-        // 無限循環發射大煙火，直到點擊再玩一次
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
         }, 300);
@@ -655,7 +639,11 @@
         }
         
         document.getElementById("mainGameContainer").style.display = "none";
-        document.body.style.overflow = "hidden"; // 重新鎖回開場無 Bar 狀態
+        
+        // 重設時，再度回到最初開場的無 Bar 狀態
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        
         completedLevels.clear();
         loadLevel(0);
     }
