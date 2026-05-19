@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V4.5 - 全螢幕常駐灑花豪華版！</title>
+    <title>Flexbox 倉鼠大冒險 V4.6 - 全螢幕頂部灑花豪華版！</title>
     <style>
         /* --- 🔒 全局初始化鎖定，避免開場閃爍滾動條 --- */
         html, body {
@@ -17,7 +17,7 @@
 
         body {
             font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            background-color: #0b0f19; /* 全局採用舒服的高質感太空深藍黑 */
+            background-color: #0b0f19; /* 全局採用高質感太空深藍黑 */
             color: #1e293b;
             display: flex;
             justify-content: center;
@@ -38,7 +38,7 @@
             z-index: 10; /* 確保主遊戲在粒子上方 */
         }
 
-        /* --- ✨ 標題：採用純黃色漸層，區塊具體化渲染 --- */
+        /* --- ✨ 標題：純黃色漸層，區塊具體化渲染 --- */
         h1.gradient-title {
             text-align: center;
             font-size: 3.5em; 
@@ -253,7 +253,7 @@
             z-index: 9999; 
             overflow: hidden !important; 
             box-sizing: border-box;
-            opacity: 1; /* [核心修改] 取消第一幕，一進網頁直接 100% 秀出選單畫面 */
+            opacity: 1; 
             visibility: visible;
         }
         .welcome-view.fade-out {
@@ -331,8 +331,10 @@
         }
         
         @keyframes snowFallAnimation {
-            0% { transform: translateY(0px) translateX(0px) rotate(0deg) scale(0.3); opacity: 0; }
+            /* 🛠️ 【修改核心】起點改回頂端外部 -20px，讓花灑滿整個上半部 */
+            0% { transform: translateY(-20px) translateX(0px) rotate(0deg) scale(0.3); opacity: 0; }
             10% { opacity: 1; }
+            /* 🛠️ 終點維持平滑降落到螢幕底部外部 */
             100% { transform: translateY(110vh) translateX(var(--snow-x)) rotate(360deg) scale(var(--snow-scale)); opacity: 0; }
         }
 
@@ -481,7 +483,7 @@
     let fireworkTimer = null; 
     let snowInterval = null; 
 
-    // 🌌 粒子發射器（直接從螢幕幾何中心高度連續向外、往下鋪灑，絕不斷裂）
+    // 🌌 粒子發射器（🛠️ 修正核心：回歸螢幕最上方邊緣連續向下鋪灑）
     function startPermanentSnow() {
         const stage = document.getElementById("introStage");
         if (!stage) return;
@@ -496,10 +498,11 @@
             const size = Math.random() * 18 + 6;
             flake.style.fontSize = size + "px";
             
-            // [精準定位] 直接從螢幕中心高度噴發
+            // [修改核心] 回歸螢幕最上方邊緣隨機寬度發射
             flake.style.left = Math.random() * 100 + "vw";
-            flake.style.top = (Math.random() * 10 + 45) + "vh"; 
+            flake.style.top = "-20px"; 
             
+            // 粒子飄落時間微調 (2s ~ 3.5s) 更加沉浸唯美
             const duration = Math.random() * 1.5 + 2; 
             flake.style.animationDuration = duration + "s";
             
@@ -518,7 +521,7 @@
     function initGame() {
         renderNav();
         loadLevel(currentLevelIndex);
-        startPermanentSnow(); // 一進網頁，漫天粒子雨立刻常駐灑落
+        startPermanentSnow(); // 一進網頁，漫天頂部粒子雨立刻常駐灑落
     }
 
     function startAdventure() {
@@ -662,7 +665,7 @@
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 🔒 結局封印拖拉 Bar
+        // 🔒 結局鎖死無 Bar 狀態
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
@@ -709,7 +712,7 @@
         }
     }
 
-    // 🔄 【閉合邏輯修正】點擊再玩一次，秒跳回完美的「常駐中心灑花開場畫面」！
+    // 🔄 點擊再玩一次，秒跳回完美的「全螢幕頂部灑花開場畫面」！
     function completelyResetGame() {
         if(fireworkTimer) clearInterval(fireworkTimer); 
         if(snowInterval) clearInterval(snowInterval); 
@@ -717,7 +720,6 @@
         const endingView = document.getElementById("cleanEndingView");
         if (endingView) endingView.remove();
         
-        // 🚀 讓開場大畫面移除漸隱，重新華麗現身
         const welcomeStage = document.getElementById("welcomeStage");
         if (welcomeStage) {
             welcomeStage.classList.remove("fade-out");
@@ -733,7 +735,7 @@
         completedLevels.clear();
         loadLevel(0);
         
-        // 重新喚醒無限常駐粒子雨，重返最完美的開場
+        // 重新喚醒無限頂部粒子雨，重返最震撼的開場
         startPermanentSnow();
     }
 
