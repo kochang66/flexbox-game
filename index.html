@@ -248,12 +248,12 @@
             75% { transform: translateX(8px); }
         }
 
-        /* --- ✨ [修復核心] 單關答對：彩色碎紙花飄落特效樣式 --- */
+        /* --- ✨ [修改尺寸] 單關答對：彩色碎紙花微縮精緻版樣式 --- */
         .confetti {
             position: absolute; 
-            width: 12px; 
-            height: 12px; 
-            border-radius: 30%;
+            width: 6px;   /* 🛠️ 從 12px 縮小為 6px */
+            height: 6px;  /* 🛠️ 從 12px 縮小為 6px */
+            border-radius: 20%;
             z-index: 5;
             pointer-events: none;
             animation: confettiFallAnimation 1.5s ease-out forwards;
@@ -485,7 +485,7 @@
         {
             title: "第四關",
             description: "換個隊形！請將主軸方向改成「直向排列」，讓倉鼠們轉為垂直由上往下排成一縱隊。",
-            hint: "設定主軸「直向排列」→ flex-direction: column;",
+            hint: "設定主軸「直向排列']' → flex-direction: column;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.flexDirection === "column"
         },
@@ -639,7 +639,7 @@
                 icon.innerText = "🐹";
                 text.innerText = "倉鼠排好隊了！";
 
-                createConfettiEffect(); // 🎉 [修復成功] 呼叫修正後的碎紙花特效
+                createConfettiEffect(); 
 
                 setTimeout(() => {
                     if (currentLevelIndex < levels.length - 1) {
@@ -663,7 +663,6 @@
         }
     }
 
-    // 🎉 [修復核心] 單關破關彩色紙花特效優化（改為相對於預覽視窗動態向下飄落）
     function createConfettiEffect() {
         const panel = document.querySelector('.visual-panel');
         if (!panel) return;
@@ -673,18 +672,14 @@
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
             
-            // 隨機碎花顏色、尺寸與水平落點
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             confetti.style.left = (Math.random() * 90 + 5) + '%'; 
             confetti.style.top = '-10px';
             
-            // 錯開每片小碎花的演繹時間差
             const delay = Math.random() * 0.4;
             confetti.style.animationDelay = delay + 's';
             
             panel.appendChild(confetti);
-
-            // 當 CSS 的動畫結束（animationend）後，自動把 DOM 清乾淨
             confetti.addEventListener('animationend', () => confetti.remove());
         }
     }
