@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V3.3 - 絢彩漸層與無限煙火完美修復版！</title>
+    <title>Flexbox 倉鼠大冒險 V3.6 - 黃色漸層與開場動畫修復版！</title>
     <style>
         /* --- 🔒 全局初始化鎖定，避免開場閃爍滾動條 --- */
         html, body {
@@ -37,7 +37,7 @@
             display: none; 
         }
 
-        /* --- ✨ [絕對修正] 炫彩漸層大標題（保證 100% 顯現） --- */
+        /* --- ✨ [修正] 標題：採用黃色漸層，移除行內圖示，修正彩色漸層顯現問題 --- */
         h1.gradient-title {
             text-align: center;
             font-size: 3.5em; 
@@ -47,8 +47,8 @@
             display: block; /* 核心修正：強制區塊渲染 */
             width: 100%;
             
-            /* 頂級彩色金橘漸層配置 */
-            background: linear-gradient(135deg, #ffe066 0%, #f59e0b 40%, #d97706 70%, #b45309 100%) !important;
+            /* [修改] 取消彩色漸層，改用黃色漸層 */
+            background: linear-gradient(135deg, #ffe066 0%, #f59e0b 40%, #d97706 70%, #fcd34d 100%) !important;
             background-clip: text !important;
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important; /* 強制文字透明填色 */
@@ -197,7 +197,7 @@
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column; 
-            justify-content: center;
+            justify(i): center;
             align-items: center;
             border-radius: 50%; 
             position: relative;
@@ -258,7 +258,7 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- 🚀 完美無捲軸・開場歡迎畫面 --- */
+        /* --- 🚀 [修改] 完美無捲軸・開場歡迎畫面 --- */
         .welcome-view {
             width: 100vw;
             height: 100vh;
@@ -272,6 +272,8 @@
             z-index: 10000; 
             overflow: hidden !important; 
             box-sizing: border-box;
+            opacity: 1;
+            visibility: visible;
         }
         .welcome-view.fade-out {
             opacity: 0;
@@ -312,6 +314,13 @@
             transition: all 0.2s ease;
         }
 
+        /* [新增] 開場縮放旋轉動畫核心 */
+        @keyframes zoomInRotate {
+            0% { transform: scale(0.1) rotate(-360deg); opacity: 0; }
+            80% { transform: scale(1.1) rotate(10deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
         /* --- 🎉 完美無捲軸・畢業通關畫面 --- */
         .ending-view {
             width: 100vw;
@@ -344,13 +353,13 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* --- 🎆 [絕對修正] 結局獨立大煙火動畫軌跡樣式 --- */
+        /* [絕對修正] 結局獨立大煙火粒子動畫 */
         .ending-firework {
             position: absolute; 
             width: 6px; 
             height: 6px; 
             border-radius: 50%;
-            /* 修正核心：與下方 JS 呼叫名稱與動畫軌跡精準對齊 */
+            /* 修正核心：呼叫下方的 JS 名稱與軌跡 */
             animation: fireworkSpreadAnimation 1.8s ease-out forwards;
         }
         @keyframes fireworkSpreadAnimation {
@@ -373,7 +382,7 @@
         <div class="ham-preview" style="background: linear-gradient(135deg, #63e6be, #0ca678); animation-delay: 0.8s;">🐹</div>
     </div>
 
-    <button class="start-adventure-btn" onclick="startAdventure()">開始冒險 🚀</button>
+    <button class="start-adventure-btn" id="startBtn" onclick="startAdventure()" style="display: none;">開始冒險 🚀</button>
 </div>
 
 <div class="container" id="mainGameContainer">
@@ -455,16 +464,32 @@
     const completedLevels = new Set(); 
     let fireworkTimer = null; 
 
+    // [新增] 執行縮放旋轉開場動畫
+    function playIntroAnimation() {
+        const stage = document.getElementById("welcomeStage");
+        stage.style.animation = "zoomInRotate 1.2s ease-out forwards";
+        
+        // 動畫結束後才秀出按鈕
+        setTimeout(() => {
+            document.getElementById("startBtn").style.display = "inline-block";
+        }, 1200);
+    }
+
     function initGame() {
         renderNav();
         loadLevel(currentLevelIndex);
+        
+        // 進入網頁時執行開場動畫
+        playIntroAnimation();
     }
 
     function startAdventure() {
+        // 1. 隱藏歡迎大螢幕
         document.getElementById("welcomeStage").classList.add("fade-out"); 
+        // 2. 秀出主遊戲
         document.getElementById("mainGameContainer").style.display = "block";
         
-        // 🛠️ 解鎖：釋放第一關到第五關的右側滾動條，確保玩家能自由往下拉
+        // 🛠️ 解鎖：釋放全局 overflow，將第一關到第五關的右側滾動條釋放，確保玩家能自由往下拉
         document.documentElement.style.overflowY = "auto";
         document.body.style.overflowY = "auto";
     }
@@ -595,11 +620,10 @@
         }
     }
 
-    // 🎉 獨立結局畫面（無限大煙火爆裂）
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 🔒 鎖定：結局大畫面封印滾動條，保持整潔
+        // 🔒 結局大畫面封印滾動條，保持整潔
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
@@ -613,7 +637,7 @@
         `;
         document.body.appendChild(endingDiv);
 
-        // 🎆 啟動：無限發射大煙火
+        // 無限連續發射大煙火
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
         }, 300);
@@ -629,7 +653,7 @@
         
         for (let i = 0; i < 40; i++) {
             const particle = document.createElement('div');
-            particle.className = 'ending-firework'; // 呼叫對齊後的 CSS 屬性
+            particle.className = 'ending-firework'; // 修正核心：呼叫下方的 CSS 名稱與軌跡
             particle.style.backgroundColor = color;
             particle.style.left = centerX;
             particle.style.top = centerY;
@@ -660,12 +684,15 @@
         
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 🔒 開場：重新鎖定無 Bar 狀態
+        // 🔒 重設時，再度回到最初開場的無 Bar 狀態
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
         
         completedLevels.clear();
         loadLevel(0);
+        
+        // 重設後也重新播放一次開場縮放動畫
+        playIntroAnimation();
     }
 
     window.onload = initGame;
