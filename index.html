@@ -3,20 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V3.5 - 3D萌寵與漸層發光版！</title>
+    <title>Flexbox 倉鼠大冒險 V3.1 - 炫彩漸層與無限煙火完美版！</title>
     <style>
-        /* --- 基礎版面與配色 --- */
-        :root {
-            --primary-color: #3b82f6; 
-            --success-color: #22c55e; 
-            --warning-color: #f59e0b; 
-            --danger-color: #ef4444;
-            --bg-color: #f0f4f8;
-            --text-color: #1e293b;
-            --code-bg: #1e1e1e;
+        /* --- 🔒 [核心黑科技] 徹底摧毀所有多餘的拖拉 Bar --- */
+        html, body {
+            overflow: hidden !important; /* 確保全局初始不出現捲軸 */
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            box-sizing: border-box;
         }
 
-        /* 遊戲主容器 */
+        body {
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* 遊戲進入後的容器：允許內部正常滾動，但開場跟結尾不影響它 */
         .container {
             width: 100%;
             max-width: 1100px;
@@ -24,23 +32,24 @@
             padding: 25px;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            margin-top: 20px;
+            margin: 20px 10px;
             box-sizing: border-box;
-            color: var(--text-color);
+            display: none; /* 預設先隱藏，等點擊開始冒險才顯示 */
         }
 
-        /* [修改] 遊戲內標題：加大、加粗、套用華麗金橘漸層與發光特效 */
-        h1.gradient-title {
+        /* --- ✨ [修改] 標題：每個字都呈現華麗彩色金橘漸層與霓虹發光 --- */
+        .gradient-title {
             text-align: center;
-            font-size: 3.5em; /* 加大標題 */
-            font-weight: 800; /* 加粗字體 */
+            font-size: 3.5em; 
+            font-weight: 900;
             margin-top: 0;
             margin-bottom: 25px;
-            background: linear-gradient(135deg, #fbbf24, #d97706); /* 金橘彩色漸層 */
+            background: linear-gradient(135deg, #fcd34d, #f59e0b, #d97706, #b45309); /* 豐富的彩色金橘漸層 */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            display: block;
-            filter: drop-shadow(0 4px 12px rgba(217, 119, 6, 0.35)); /* 霓虹發光 */
+            display: inline-block;
+            width: 100%;
+            filter: drop-shadow(0 4px 15px rgba(217, 119, 6, 0.45)); 
         }
         
         /* --- 關卡導覽 --- */
@@ -65,14 +74,14 @@
             font-size: 0.95em;
         }
         .level-btn.active {
-            background-color: #d97706;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: white;
             border-color: #d97706;
             box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
         }
         .level-btn.completed {
-            border-color: var(--success-color);
-            color: var(--success-color);
+            border-color: #22c55e;
+            color: #22c55e;
         }
 
         /* --- 遊戲主區塊 --- */
@@ -84,7 +93,6 @@
             .game-area { flex-direction: column; }
         }
         
-        /* 左側控制面板 */
         .control-panel {
             flex: 1;
             display: flex;
@@ -98,23 +106,23 @@
             border-left: 6px solid #d97706;
             border-radius: 8px;
         }
-        .instruction-box h3 { margin: 0 0 10px 0; color: #d97706; }
+        .instruction-box h3 { margin: 0 0 10px 0; color: #d97706; font-size: 1.2em;}
         .instruction-box p { margin: 0; line-height: 1.6; font-size: 1.05em;}
 
         .hint-box {
             background: #fffbeb;
             padding: 15px;
-            border-left: 6px solid var(--warning-color);
+            border-left: 6px solid #f59e0b;
             border-radius: 8px;
             color: #92400e;
             display: none;
-            font-size: 0.95em;
+            font-size: 1.1em;
+            font-weight: 700; 
             line-height: 1.5;
         }
         
-        /* CSS 輸入區域 */
         .code-container {
-            background: var(--code-bg);
+            background: #1e1e1e;
             color: #d4d4d4;
             padding: 18px;
             border-radius: 10px;
@@ -138,7 +146,6 @@
             outline: none;
         }
 
-        /* 按鈕群組 */
         .btn-group {
             display: flex;
             gap: 15px;
@@ -160,8 +167,8 @@
         button.action-btn:active { transform: scale(0.98); }
 
         .hint-btn { background: #d97706; color: white; }
-        .check-btn { background: var(--success-color); color: white; }
-        .check-btn.error { background-color: var(--danger-color); animation: shake 0.4s; }
+        .check-btn { background: #22c55e; color: white; }
+        .check-btn.error { background-color: #ef4444; animation: shake 0.4s; }
         .check-btn.success-glow { background: linear-gradient(45deg, #f59e0b, #fbbf24); }
 
         /* 右側畫布預覽區 */
@@ -176,47 +183,61 @@
         }
         #flex-container { width: 100%; height: 100%; box-sizing: border-box; padding: 15px; display: flex; }
 
-        /* --- 🐹 [修改] 清晰萌萌倉鼠樣式核心區 --- */
+        /* --- 🐹 [修正] 活體動態倉鼠樣式：完美現身，絕對看得到大萌臉 --- */
         .card {
             width: 95px; 
             height: 95px; 
             margin: 8px; 
             color: white; 
             font-weight: 800; 
+            transition: all 0.3s ease;
             display: flex;
+            flex-direction: column; 
             justify-content: center;
             align-items: center;
-            border-radius: 50%; /* 圓滾滾的身軀 */
+            border-radius: 50%; 
             position: relative;
             box-shadow: 0 6px 12px rgba(217,119,6,0.2);
             border: 3px solid #fff;
-            overflow: hidden; /* 確保頭像不超出邊框 */
-            transition: all 0.3s ease;
+            animation: hamsterFloat 3s ease-in-out infinite;
         }
-        /* [修改] 使用清晰的 3D 卡通倉鼠頭像 */
+
+        /* 賦予實體漸層底色 */
+        .card-1 { background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0s; }
+        .card-2 { background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.3s; }
+        .card-3 { background: linear-gradient(135deg, #da77f2, #9c36b5); animation-delay: 0.6s; }
+        .card-4 { background: linear-gradient(135deg, #ffd43b, #f59f00); animation-delay: 0.9s; }
+        .card-5 { background: linear-gradient(135deg, #63e6be, #0ca678); animation-delay: 1.2s; }
+
+        @keyframes hamsterFloat {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.03); } 
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        /* 徹底放大並置中倉鼠符號，杜絕排版擠壓與遮擋 */
         .card .avatar {
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
+            font-size: 42px; /* 放大表情 */
+            line-height: 1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: hamsterSquish 1.5s ease-in-out infinite alternate;
         }
-        /* 倉鼠編號角標 */
+        @keyframes hamsterSquish {
+            0% { transform: scaleX(1); }
+            100% { transform: scaleX(0.95); }
+        }
+
         .card .number {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            font-size: 13px;
+            font-size: 11px;
             background: rgba(0,0,0,0.4);
-            padding: 2px 8px;
+            padding: 1px 6px;
             border-radius: 10px;
+            margin-top: 2px;
         }
-        
-        /* 倉鼠漸層披風毛色與頭像（使用假路徑，建議您替換為實際圖片或更精美的emoji） */
-        .card-1 { background: linear-gradient(135deg, #ff8787, #e03131); }
-        .card-2 { background: linear-gradient(135deg, #74c0fc, #1971c2); }
-        .card-3 { background: linear-gradient(135deg, #da77f2, #9c36b5); }
-        .card-4 { background: linear-gradient(135deg, #ffd43b, #f59f00); }
-        .card-5 { background: linear-gradient(135deg, #63e6be, #0ca678); }
 
         /* --- 錯誤按鈕抖動 --- */
         @keyframes shake {
@@ -235,7 +256,7 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- ✨ 🚀 [修改] 杜絕開始動畫右側 Bar --- */
+        /* --- 🚀 [修改] 完美無捲軸・開場歡迎畫面 --- */
         .welcome-view {
             width: 100vw;
             height: 100vh;
@@ -244,25 +265,56 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #fbbf24;
-            text-align: center;
-            position: fixed; 
+            position: fixed;
             top: 0; left: 0;
             z-index: 10000; 
-            overflow: hidden; /* [核心修改] 杜絕開場畫面右側 Bar */
-            transition: opacity 0.6s ease, visibility 0.6s ease;
+            overflow: hidden !important; /* 絕對封印右側捲軸 */
+            box-sizing: border-box;
         }
-        .welcome-view.fade-out { opacity: 0; visibility: hidden; }
-        .welcome-view p { color: #ffffff; font-size: 1.5em; margin-bottom: 40px; }
+        .welcome-view.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .welcome-view p {
+            color: #94a3b8;
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+        .welcome-hamsters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+        .welcome-hamsters .ham-preview {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            font-size: 40px;
+            display: flex; justify-content: center; align-items: center;
+            border: 3px solid white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            line-height: 1;
+            animation: hamsterFloat 2.5s ease-in-out infinite;
+        }
         .start-adventure-btn {
-            padding: 18px 45px; background: linear-gradient(135deg, #f59e0b, #fbbf24);
-            color: white; border: none; border-radius: 30px; font-size: 22px; font-weight: bold;
-            cursor: pointer; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-            transition: all 0.2s;
+            padding: 18px 45px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+            transition: all 0.2s ease;
         }
-        .start-adventure-btn:hover { background-color: #d97706; transform: translateY(-2px); }
+        .start-adventure-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(245, 158, 11, 0.8);
+        }
 
-        /* --- 🎉 杜絕結束動畫右側 Bar --- */
+        /* --- 🎉 [修改] 完美無捲軸・畢業通關畫面 --- */
         .ending-view {
             width: 100vw;
             height: 100vh;
@@ -271,20 +323,22 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #fbbf24;
-            text-align: center;
             position: fixed; 
             top: 0; left: 0;
             z-index: 9999;
-            overflow: hidden; /* [核心修改] 杜絕結束畫面右側 Bar */
+            overflow: hidden !important; /* 絕對封印右側捲軸 */
+            box-sizing: border-box;
         }
-        .ending-view h2 { font-size: 3.5em; margin: 0; text-shadow: 0 0 20px #f59e0b; animation: bounceIn 1s ease; }
-        .ending-view p { font-size: 1.5em; color: white; margin: 15px 0 30px 0; }
-        .replay-btn {
-            padding: 15px 30px; background: var(--success-color); color: white;
-            border: none; border-radius: 30px; font-size: 18px; font-weight: bold;
-            cursor: pointer; box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+        .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
+        .ending-view p { font-size: 1.6em; color: #ffffff; margin: 20px 0 40px 0; opacity: 0.9; }
+        .restart-btn {
+            padding: 16px 36px; background: #22c55e; color: white;
+            border: none; border-radius: 30px; font-size: 20px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+            transition: all 0.2s;
+            z-index: 10001; 
         }
+        .restart-btn:hover { background-color: #16a34a; transform: translateY(-2px); }
 
         @keyframes bounceIn {
             0% { transform: scale(0.3); opacity: 0; }
@@ -293,10 +347,9 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* 煙火粒子 */
-        .firework {
-            position: absolute; width: 5px; height: 5px; border-radius: 50%;
-            animation: fireworkSpread 2s ease-out forwards;
+        .ending-firework {
+            position: absolute; width: 6px; height: 6px; border-radius: 50%;
+            animation: fireworkSpread 1.8s ease-out forwards;
         }
         @keyframes fireworkSpread {
             0% { transform: translate(0, 0); opacity: 1; }
@@ -307,13 +360,22 @@
 <body>
 
 <div class="welcome-view" id="welcomeStage">
-    <h1 class="gradient-title">Flexbox 倉鼠大冒險！</h1>
-    <p>用排版魔法，幫萌寵找到完美的家</p>
+    <span class="gradient-title">🐹 Flexbox 倉鼠大冒險！</span>
+    <p>—— 用排版魔法，幫萌寵找到完美的家 ——</p>
+    
+    <div class="welcome-hamsters">
+        <div class="ham-preview" style="background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0s;">🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.2s;">🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #da77f2, #9c36b5); animation-delay: 0.4s;">🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #ffd43b, #f59f00); animation-delay: 0.6s;">🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #63e6be, #0ca678); animation-delay: 0.8s;">🐹</div>
+    </div>
+
     <button class="start-adventure-btn" onclick="startAdventure()">開始冒險 🚀</button>
 </div>
 
 <div class="container" id="mainGameContainer">
-    <h1 class="gradient-title">Flexbox 倉鼠大冒險！</h1>
+    <span class="gradient-title">🐹 Flexbox 倉鼠大冒險！</span>
     <div class="level-nav" id="levelNav"></div>
 
     <div class="game-area">
@@ -346,40 +408,43 @@
 </div>
 
 <script>
-    // --- 關卡資料庫 ---
+    // 5隻大臉倉鼠表情包
+    const hamsters = ["🐹", "🐹", "🐹", "🐹", "🐹"];
+
+    // 快速提示完全對齊功能
     const levels = [
         {
             title: "第一關",
-            description: "預設的區塊元素是上下排列的。請使用屬性讓這三張卡片「橫向一排」吧！",
+            description: "小倉鼠們預設是上下疊在一起的。請使用屬性讓這三隻倉鼠舒服地「橫向排成一列」吧！",
             hint: "設定主軸「橫向排列」→ flex-direction: row;",
             cardsCount: 3,
-            initStyles: { flexDirection: "column" }, // 故意先直排讓學生切換
+            initStyles: { flexDirection: "column" }, 
             validate: (computedStyle) => computedStyle.flexDirection === "row"
         },
         {
             title: "第二關",
-            description: "太棒了！接下來請讓這三張橫排的卡片，在畫布中「水平置中」對對。.",
+            description: "太棒了！接下來請讓這三張橫排的倉鼠，在籠子裡「水平置中」對齊集合。",
             hint: "設定主軸「水平置中」→ justify-content: center;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.justifyContent === "center"
         },
         {
             title: "第三關",
-            description: "現在卡片已經水平置中了，請再加把勁，讓卡片也「垂直置中」吧！",
+            description: "現在倉鼠已經水平置中了，請再加把勁，讓牠們在上下高度也「垂直置中」吧！",
             hint: "設定交錯軸「垂直置中」→ align-items: center;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.alignItems === "center"
         },
         {
             title: "第四關",
-            description: "轉個彎吧！請將主軸方向改成「直向排列」，讓卡片轉為垂直由上往下排。",
+            description: "換個隊形！請將主軸方向改成「直向排列」，讓倉鼠們轉為垂直由上往下排成一縱隊。",
             hint: "設定主軸「直向排列」→ flex-direction: column;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.flexDirection === "column"
         },
         {
             title: "第五關",
-            description: "大魔王來了！這裡有 5 張卡片，寬度已經超出容器了。請設定讓卡片在空間不足時「自動換行」。",
+            description: "大魔王來了！這次來了 5 隻大倉鼠，籠子塞不下啦。請設定屬性讓空間不足時牠們能「自動換行」到下一排。",
             hint: "設定「自動換行」→ flex-wrap: wrap;",
             cardsCount: 5,
             validate: (computedStyle) => computedStyle.flexWrap === "wrap"
@@ -387,21 +452,20 @@
     ];
 
     let currentLevelIndex = 0;
-    const completedLevels = new Set(); // 記錄完成的關卡
+    const completedLevels = new Set(); 
+    let fireworkTimer = null; 
 
-    // --- 初始化 ---
     function initGame() {
         renderNav();
         loadLevel(currentLevelIndex);
     }
 
-    // 🚀 開始冒險
     function startAdventure() {
-        const stage = document.getElementById("welcomeStage");
-        stage.classList.add("fade-out"); // 加上 CSS 淡出特效
-        setTimeout(() => {
-            stage.style.display = "none";
-        }, 600); // 動畫演完後隱藏
+        // 1. 開場動畫隱藏
+        document.getElementById("welcomeStage").classList.add("fade-out"); 
+        // 2. 顯示主遊戲畫面，並允許頁面因應主遊戲內容高度渲染
+        document.getElementById("mainGameContainer").style.display = "block";
+        document.body.style.overflowY = "auto"; 
     }
 
     function renderNav() {
@@ -412,7 +476,6 @@
             let className = 'level-btn';
             if (index === currentLevelIndex) className += ' active';
             if (completedLevels.has(index)) className += ' completed';
-            
             btn.className = className;
             btn.innerText = lvl.title;
             btn.onclick = () => switchLevel(index);
@@ -423,7 +486,6 @@
     function loadLevel(index) {
         currentLevelIndex = index;
         const level = levels[index];
-        
         renderNav();
         
         document.getElementById("levelTitle").innerText = level.title;
@@ -437,19 +499,18 @@
         
         const container = document.getElementById("flex-container");
         container.removeAttribute("style");
-        container.style.display = "flex"; // 強制維持 flex
+        container.style.display = "flex"; 
         
-        if (level.initStyles) {
-            Object.assign(container.style, level.initStyles);
-        }
+        if (level.initStyles) Object.assign(container.style, level.initStyles);
 
-        // 產生卡片
         container.innerHTML = "";
-        for (let i = 1; i <= level.cardsCount; i++) {
+        for (let i = 0; i < level.cardsCount; i++) {
             const card = document.createElement("div");
-            card.className = `card card-${i}`;
-            // 將 emoji 倉鼠替換為純文字編號，外層 card 樣式會呈現毛色
-            card.innerHTML = `<div class="number">No.${i}</div>`;
+            card.className = `card card-${i+1}`;
+            card.innerHTML = `
+                <div class="avatar">${hamsters[i]}</div>
+                <div class="number">No.${i+1}</div>
+            `;
             container.appendChild(card);
         }
     }
@@ -460,7 +521,7 @@
 
     function toggleHint() {
         const hintBox = document.getElementById("hintBox");
-        hintBox.style.display = hintBox.style.display === "none" ? "block" : "none";
+        hintBox.style.display = window.getComputedStyle(hintBox).display === "none" ? "block" : "none";
         resetCheckBtn();
     }
 
@@ -471,7 +532,6 @@
         document.getElementById("checkText").innerText = "檢查答案";
     }
 
-    // --- 核心驗證與特效邏輯 ---
     function checkAnswer() {
         const inputCode = document.getElementById("cssInput").value;
         const container = document.getElementById("flex-container");
@@ -480,43 +540,38 @@
         const text = document.getElementById("checkText");
         
         try {
-            // 套用學生輸入的代碼
-            container.style.cssText = "display: flex;" + inputCode;
-            
-            // 取得實際樣式
-            const computedStyle = window.getComputedStyle(container);
             const currentLevel = levels[currentLevelIndex];
+            container.style.cssText = "display: flex;";
+            if (currentLevel.initStyles) Object.assign(container.style, currentLevel.initStyles);
+            
+            container.style.cssText += inputCode;
+            const computedStyle = window.getComputedStyle(container);
             
             if (currentLevel.validate(computedStyle)) {
-                // 🎉 成功破關
                 completedLevels.add(currentLevelIndex);
                 renderNav();
                 
-                // 按鈕變金色 + 煙火 confetti
                 btn.className = "action-btn check-btn success-glow";
-                icon.innerText = "🏆";
-                text.innerText = "成功破關！";
+                icon.innerText = "🐹";
+                text.innerText = "倉鼠排好隊了！";
 
                 createConfettiEffect();
 
-                // 延遲後進入下一關或結局
                 setTimeout(() => {
                     if (currentLevelIndex < levels.length - 1) {
-                        loadLevel(currentLevelIndex + 1); // 自動跳下一關
+                        loadLevel(currentLevelIndex + 1); 
                     } else {
-                        triggerCleanEndingView(); // 通關結局
+                        triggerCleanEndingView(); 
                     }
                 }, 1500); 
 
             } else {
-                // ❌ 畫面不對
                 btn.className = "action-btn check-btn error";
                 icon.innerText = "❌";
-                text.innerText = "畫面不對喔";
+                text.innerText = "倉鼠撞成一團";
                 setTimeout(resetCheckBtn, 1000);
             }
         } catch (e) {
-            // ⚠️ 語法錯誤
             btn.className = "action-btn check-btn error";
             icon.innerText = "⚠️";
             text.innerText = "語法錯誤";
@@ -526,76 +581,81 @@
 
     function createConfettiEffect() {
         const panel = document.querySelector('.visual-panel');
-        const colors = ['#f59e0b', '#fbbf24', '#fff'];
-        for (let i = 0; i < 30; i++) {
+        const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
+        for (let i = 0; i < 25; i++) {
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
             confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.left = Math.random() * 90 + '%';
-            confetti.style.top = Math.random() * 50 + '%';
+            confetti.style.left = (Math.random() * 80 + 10) + '%'; 
+            confetti.style.top = '-10px';
+            confetti.style.animationDelay = (Math.random() * 0.4) + 's';
             panel.appendChild(confetti);
-            setTimeout(() => confetti.remove(), 1500);
+            confetti.addEventListener('animationend', () => confetti.remove());
         }
     }
 
-    // 🎉 獨立滿版「恭喜畢業啦！」畫面
+    // 🎉 獨立無 Bar 結局大畫面
     function triggerCleanEndingView() {
-        // 1. 直接隱藏原本裝載遊戲的整個主頁面容器，徹底清除原有的 DOM 佈局
         document.getElementById("mainGameContainer").style.display = "none";
-        
-        // 2. 動態在 <body> 最底層建立一個全新的獨立全螢幕區塊
+        document.body.style.overflow = "hidden"; // 強制鎖死結局滾動條
+
         const endingDiv = document.createElement("div");
         endingDiv.className = "ending-view";
         endingDiv.id = "cleanEndingView";
         endingDiv.innerHTML = `
-            <h2>🏆 恭喜畢業啦！</h2>
+            <span class="gradient-title" style="font-size: 3.8em;">🏆 恭喜畢業啦！</span>
             <p>你已經完美掌握了核心 Flexbox 語法！</p>
-            <button class="replay-btn" onclick="completelyResetGame()">再玩一次 🔄</button>
+            <button class="restart-btn" onclick="completelyResetGame()">再跟倉鼠玩一次 🔄</button>
         `;
         document.body.appendChild(endingDiv);
 
-        // 3. 在這個完全乾淨、無捲軸的畫布中開心地連續發射大煙火
-        for (let i = 0; i < 15; i++) {
-            setTimeout(createFirework, i * 200);
-        }
+        // 無限循環發射大煙火，直到點擊再玩一次
+        fireworkTimer = setInterval(() => {
+            createIndependentFirework(endingDiv);
+        }, 300);
     }
 
-    function createFirework() {
-        const overlay = document.getElementById("cleanEndingView");
-        const colors = ['#f59e0b', '#fbbf24', '#fff'];
+    function createIndependentFirework(targetContainer) {
+        if (!targetContainer) return;
+        const colors = ['#f59e0b', '#fbbf24', '#ffffff', '#10b981', '#3b82f6', '#ec4899'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
         
-        // 在新畫面的視窗內隨機產生爆裂中心點
-        const centerX = (Math.random() * 80 + 10) + '%';
-        const centerY = (Math.random() * 60 + 20) + '%';
+        const centerX = (Math.random() * 70 + 15) + '%';
+        const centerY = (Math.random() * 50 + 20) + '%';
         
-        // 粒子朝外飛散
         for (let i = 0; i < 40; i++) {
             const particle = document.createElement('div');
-            particle.className = 'firework';
-            particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            particle.className = 'ending-firework';
+            particle.style.backgroundColor = color;
             particle.style.left = centerX;
             particle.style.top = centerY;
+            particle.style.boxShadow = `0 0 12px ${color}`;
             
-            // 隨機爆裂方向與距離 (CSS 變數)
-            particle.style.setProperty('--fx-x', (Math.random() - 0.5) * 400 + 'px');
-            particle.style.setProperty('--fx-y', (Math.random() - 0.5) * 300 + 'px');
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 180 + 60;
+            particle.style.setProperty('--fx-x', Math.cos(angle) * distance + 'px');
+            particle.style.setProperty('--fx-y', Math.sin(angle) * distance + 'px');
             
-            particle.style.animationDuration = Math.random() * 1 + 1 + 's';
+            particle.style.animationDuration = (Math.random() * 0.8 + 1.0) + 's';
             
-            overlay.appendChild(particle);
-            setTimeout(() => particle.remove(), 2000);
+            targetContainer.appendChild(particle);
+            particle.addEventListener('animationend', () => particle.remove());
         }
     }
 
     function completelyResetGame() {
-        // 移除獨立結局畫面
+        if(fireworkTimer) clearInterval(fireworkTimer); 
+        
         const endingView = document.getElementById("cleanEndingView");
-        if (endingView) {
-            endingView.remove();
+        if (endingView) endingView.remove();
+        
+        const welcomeStage = document.getElementById("welcomeStage");
+        if (welcomeStage) {
+            welcomeStage.classList.remove("fade-out");
         }
         
-        // 重新顯示主遊戲，並初始化
-        document.getElementById("mainGameContainer").style.display = "block";
+        document.getElementById("mainGameContainer").style.display = "none";
+        document.body.style.overflow = "hidden"; // 重新鎖回開場無 Bar 狀態
         completedLevels.clear();
         loadLevel(0);
     }
