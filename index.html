@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V2.9 - 漸層發光與完美無捲軸版！</title>
+    <title>Flexbox 倉鼠大冒險 V3.0 - 炫彩漸層與無限煙火版！</title>
     <style>
         /* --- 基礎版面與配色 --- */
         :root {
@@ -16,11 +16,19 @@
             --code-bg: #1e1e1e;
         }
 
+        /* [優化] 從根本杜絕整個網頁與特效產生任何多餘的滾動條 */
+        html, body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
         body {
             font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             background-color: var(--bg-color);
-            margin: 0;
             padding: 10px;
+            box-sizing: border-box;
             color: var(--text-color);
             display: flex;
             justify-content: center;
@@ -39,17 +47,18 @@
             box-sizing: border-box;
         }
 
-        /* [修改] 遊戲內標題：同步開場文字大小、採用炫麗漸層與發光特效 */
-        h1 {
+        /* [優化] 統一所有大標題為耀眼的彩色漸層文字與發光特效 */
+        .gradient-title {
             text-align: center;
-            font-size: 3.5em; /* 同步開場大小 */
+            font-size: 3.5em; 
             font-weight: 800;
             margin-top: 0;
             margin-bottom: 25px;
-            background: linear-gradient(135deg, #fbbf24, #d97706); /* 金橘漸層 */
+            background: linear-gradient(135deg, #fbbf24, #d97706); /* 金橘彩色漸層 */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 12px rgba(217, 119, 6, 0.25)); /* 微微發光 */
+            display: block;
+            filter: drop-shadow(0 4px 15px rgba(217, 119, 6, 0.35)); 
         }
         
         /* --- 關卡導覽 --- */
@@ -117,7 +126,7 @@
             color: #92400e;
             display: none;
             font-size: 1.1em;
-            font-weight: 700; /* 讓提示文字更明顯 */
+            font-weight: 700; 
             line-height: 1.5;
         }
         
@@ -215,8 +224,12 @@
         }
 
         .card .avatar {
-            font-size: 34px;
+            font-size: 36px;
             margin-bottom: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1; /* 徹底修正 emoji 造成的排版擠壓 */
             animation: hamsterSquish 1.5s ease-in-out infinite alternate;
         }
         @keyframes hamsterSquish {
@@ -225,7 +238,7 @@
         }
 
         .card .number {
-            font-size: 14px;
+            font-size: 13px;
             background: rgba(0,0,0,0.3);
             padding: 2px 8px;
             border-radius: 10px;
@@ -248,7 +261,7 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- ✨ 🚀 炫麗開場歡迎畫面樣式 --- */
+        /* --- ✨ 🚀 絕對無捲軸歡迎畫面樣式 --- */
         .welcome-view {
             width: 100vw;
             height: 100vh;
@@ -260,7 +273,7 @@
             position: fixed;
             top: 0; left: 0;
             z-index: 10000; 
-            overflow: hidden; /* [修改] 杜絕開場畫面右側 Bar */
+            overflow: hidden; /* 杜絕最右邊拉條 Bar */
             transition: opacity 0.6s ease, visibility 0.6s ease;
             opacity: 1;
             visibility: visible;
@@ -268,16 +281,6 @@
         .welcome-view.fade-out {
             opacity: 0;
             visibility: hidden;
-        }
-        .welcome-view h1 {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #fbbf24, #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(245,158,11,0.4);
-            margin-bottom: 10px;
-            font-weight: 800;
-            animation: bounceIn 1.2s ease;
         }
         .welcome-view p {
             color: #94a3b8;
@@ -293,10 +296,11 @@
         .welcome-hamsters .ham-preview {
             width: 75px; height: 75px;
             border-radius: 50%;
-            font-size: 32px;
+            font-size: 34px;
             display: flex; justify-content: center; align-items: center;
             border: 3px solid white;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            line-height: 1;
             animation: hamsterFloat 2.5s ease-in-out infinite;
         }
         .start-adventure-btn {
@@ -322,7 +326,7 @@
             100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
         }
 
-        /* --- 🎉 畢業通關佈局樣式 --- */
+        /* --- 🎉 絕對無捲軸畢業通關畫面樣式 --- */
         .ending-view {
             width: 100vw;
             height: 100vh;
@@ -336,7 +340,7 @@
             position: fixed; 
             top: 0; left: 0;
             z-index: 9999;
-            overflow: hidden; /* [修改] 杜絕結束畫面右側 Bar */
+            overflow: hidden; /* 杜絕最右邊拉條 Bar */
         }
         .ending-view h2 { font-size: 3.8em; margin: 0; text-shadow: 0 0 25px rgba(245,158,11,0.7); animation: bounceIn 1s ease; }
         .ending-view p { font-size: 1.6em; color: #ffffff; margin: 20px 0 40px 0; opacity: 0.9; }
@@ -345,6 +349,7 @@
             border: none; border-radius: 30px; font-size: 20px; font-weight: bold;
             cursor: pointer; box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
             transition: all 0.2s;
+            z-index: 10001; /* 確保按鈕永遠在煙火最上層可供點擊 */
         }
         .restart-btn:hover { background-color: #16a34a; transform: translateY(-2px); }
 
@@ -369,15 +374,17 @@
 
 <!-- 🚀 炫麗開場歡迎畫面 -->
 <div class="welcome-view" id="welcomeStage">
-    <h1>🐹 Flexbox 倉鼠大冒險！</h1>
+    <!-- [優化] 彩色漸層標題 -->
+    <span class="gradient-title">🐹 Flexbox 倉鼠大冒險！</span>
     <p>—— 用排版魔法，幫萌寵找到完美的家 ——</p>
     
+    <!-- [優化] 徹底修正倉鼠臉部表情，確保清晰不被遮擋 -->
     <div class="welcome-hamsters">
         <div class="ham-preview" style="background: linear-gradient(135deg, #ff8787, #e03131); animation-delay: 0.0s;">🐹</div>
-        <div class="ham-preview" style="background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.2s;">🐹💤</div>
-        <div class="ham-preview" style="background: linear-gradient(135deg, #da77f2, #9c36b5); animation-delay: 0.4s;">✨🐹</div>
-        <div class="ham-preview" style="background: linear-gradient(135deg, #ffd43b, #f59f00); animation-delay: 0.6s;">🐹🐾</div>
-        <div class="ham-preview" style="background: linear-gradient(135deg, #63e6be, #0ca678); animation-delay: 0.8s;">🧐🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #74c0fc, #1971c2); animation-delay: 0.2s;">🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #da77f2, #9c36b5); animation-delay: 0.4s;">🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #ffd43b, #f59f00); animation-delay: 0.6s;">🐹</div>
+        <div class="ham-preview" style="background: linear-gradient(135deg, #63e6be, #0ca678); animation-delay: 0.8s;">🐹</div>
     </div>
 
     <button class="start-adventure-btn" onclick="startAdventure()">開始冒險 🚀</button>
@@ -385,8 +392,8 @@
 
 <!-- 遊戲主場景 -->
 <div class="container" id="mainGameContainer">
-    <!-- [修改] 遊戲內大標題同步漸層發光特效 -->
-    <h1>🐹 Flexbox 倉鼠大冒險！</h1>
+    <!-- [優化] 內部標題完美同步漸層色 -->
+    <span class="gradient-title">🐹 Flexbox 倉鼠大冒險！</span>
     <div class="level-nav" id="levelNav"></div>
 
     <div class="game-area">
@@ -419,15 +426,16 @@
 </div>
 
 <script>
+    // [優化] 倉鼠頭像重新整理，去除干擾文字，確保臉部清晰可見
     const hamsters = [
-        { avatar: "🐹", name: "胖胖" },
-        { avatar: "🐹💤", name: "呆呆" },
-        { avatar: "✨🐹", name: "閃閃" },
-        { avatar: "🐹🐾", name: "美美" },
-        { avatar: "🧐🐹", name: "學霸" }
+        { avatar: "🐹" },
+        { avatar: "🐹" },
+        { avatar: "🐹" },
+        { avatar: "🐹" },
+        { avatar: "🐹" }
     ];
 
-    // [修改] 關卡資料庫：精準對齊指定的快速提示內容格式
+    // [優化] 快速提示文字完全遵照「功能 → 語法」格式
     const levels = [
         {
             title: "第一關",
@@ -607,6 +615,7 @@
         }
     }
 
+    // 🎉 獨立滿版「恭喜畢業啦！」畫面
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
@@ -620,11 +629,9 @@
         `;
         document.body.appendChild(endingDiv);
 
-        let fireworkCount = 0;
+        // [修改] 將計數器拿掉，讓 setInterval 無限循環放煙火，永不停止！
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
-            fireworkCount++;
-            if(fireworkCount >= 15) clearInterval(fireworkTimer); 
         }, 300);
     }
 
@@ -657,7 +664,7 @@
     }
 
     function completelyResetGame() {
-        if(fireworkTimer) clearInterval(fireworkTimer);
+        if(fireworkTimer) clearInterval(fireworkTimer); // 點擊按鈕時，才正式停止煙火
         
         const endingView = document.getElementById("cleanEndingView");
         if (endingView) endingView.remove();
