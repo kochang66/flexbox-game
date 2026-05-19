@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V3.9 - 雙重縮放動畫完美對齊版！</title>
+    <title>Flexbox 倉鼠大冒險 V4.1 - 浪漫櫻花雨與直跳選單版！</title>
     <style>
         /* --- 🔒 全局初始化鎖定，避免開場閃爍滾動條 --- */
         html, body {
@@ -255,7 +255,7 @@
             100% { transform: translateY(150px) scale(0.5); opacity: 0; }
         }
 
-        /* --- 🚀 雙重開場視覺舞台 --- */
+        /* --- 🚀 雙重開場歡迎視覺舞台 --- */
         .intro-blackout {
             width: 100vw;
             height: 100vh;
@@ -274,16 +274,33 @@
             font-size: 90px; 
             cursor: default;
             user-select: none;
-            /* [修改] 調整核心動畫，強制執行兩階段完美彈跳縮放（放大 -> 縮小 -> 再放大 -> 定格） */
+            z-index: 5;
             animation: superIntroAnimation 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
         
         @keyframes superIntroAnimation {
             0% { transform: scale(0) rotate(-720deg); filter: drop-shadow(0 0 5px #f59e0b); opacity: 0; }
-            40% { transform: scale(1.6) rotate(-360deg); filter: drop-shadow(0 0 50px #ffe066); opacity: 1; } /* 第一次大放大 */
-            70% { transform: scale(0.9) rotate(-90deg); filter: drop-shadow(0 0 15px #d97706); opacity: 1; }  /* 第一次回縮 */
-            88% { transform: scale(1.2) rotate(15deg); filter: drop-shadow(0 0 35px #fbbf24); opacity: 1; }   /* 第二次微放大 */
-            100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 25px #d97706); opacity: 1; }     /* 完美定格 */
+            40% { transform: scale(1.6) rotate(-360deg); filter: drop-shadow(0 0 50px #ffe066); opacity: 1; }
+            70% { transform: scale(0.9) rotate(-90deg); filter: drop-shadow(0 0 15px #d97706); opacity: 1; }
+            88% { transform: scale(1.2) rotate(15deg); filter: drop-shadow(0 0 35px #fbbf24); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 25px #d97706); opacity: 1; }
+        }
+
+        /* 🌸 [全新功能] 夢幻落櫻粒子樣式 */
+        .petal {
+            position: absolute;
+            background: linear-gradient(135deg, #ffb7c5, #ffa3b1); /* 櫻花粉漸層 */
+            border-radius: 150px 10px 150px 10px; /* 完美刻畫櫻花瓣花型 */
+            z-index: 2;
+            pointer-events: none;
+            animation: petalFall linear forwards;
+            filter: drop-shadow(0 0 4px rgba(255, 183, 197, 0.5));
+        }
+        @keyframes petalFall {
+            0% { transform: translateY(-20px) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.85; }
+            90% { opacity: 0.85; }
+            100% { transform: translateY(105vh) translateX(var(--petal-x)) rotate(var(--petal-rot)); opacity: 0; }
         }
         
         .intro-blackout.fade-away { 
@@ -448,7 +465,7 @@
     </div>
 </div>
 
-<script { sandbox="allow-scripts" }>
+<script>
     const hamsters = ["🐹", "🐹", "🐹", "🐹", "🐹"];
 
     const levels = [
@@ -470,7 +487,7 @@
         {
             title: "第三關",
             description: "現在倉鼠已經水平置中了，請再加把勁，讓牠們在上下高度也「垂直置中」吧！",
-            hint: "設定交錯軸「垂直置中']' → align-items: center;",
+            hint: "設定交錯軸「垂直置中」→ align-items: center;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.alignItems === "center"
         },
@@ -493,27 +510,72 @@
     let currentLevelIndex = 0;
     const completedLevels = new Set(); 
     let fireworkTimer = null; 
+    let petalInterval = null; // 控制落櫻的計時器
 
-    // 🎬 雙層開場動畫排程 (時間微調為 1500ms 完美契合雙重縮放律動)
+    // [新增] 動態生成唯美的春櫻花雨粒子
+    function createPetalRain() {
+        const stage = document.getElementById("introStage");
+        if (!stage) return;
+
+        // 每 50 毫秒拋出一片花瓣，營造夢幻場景
+        petalInterval = setInterval(() => {
+            const petal = document.createElement("div");
+            petal.className = "petal";
+            
+            // 隨機花瓣寬高比例（讓花瓣形狀有胖有瘦）
+            const sizeW = Math.random() * 12 + 10;
+            const sizeH = Math.random() * 14 + 12;
+            petal.style.width = sizeW + "px";
+            petal.style.height = sizeH + "px";
+            
+            // 隨機落點與飄落速度
+            petal.style.left = Math.random() * 100 + "vw";
+            petal.style.top = "-25px";
+            
+            const duration = Math.random() * 2 + 2; // 2~4秒飄落
+            petal.style.animationDuration = duration + "s";
+            
+            // 隨機設定水平位移與空中自轉度數
+            const driftX = (Math.random() - 0.5) * 250;
+            const finalRot = Math.random() * 360 + 180;
+            petal.style.setProperty("--petal-x", driftX + "px");
+            petal.style.setProperty("--petal-rot", finalRot + "deg");
+
+            stage.appendChild(petal);
+
+            // 飄落到底部後自動刪除元素，防止記憶體溢出
+            setTimeout(() => {
+                petal.remove();
+            }, duration * 1000);
+        }, 50);
+    }
+
+    // 🎬 雙層開場動畫排程
     function playDualStageIntro() {
+        // 只有第一次開網頁會執行落櫻花雨
+        createPetalRain();
+
         setTimeout(() => {
+            if(petalInterval) clearInterval(petalInterval); // 停止產生花瓣
+            
             const stage = document.getElementById("introStage");
             if (stage) stage.classList.add("fade-away"); 
             
             document.getElementById("welcomeStage").classList.add("reveal-menu"); 
-        }, 1500);
+        }, 1500); // 1.5 秒完美演完雙重縮放與落櫻
     }
 
     function initGame() {
         renderNav();
         loadLevel(currentLevelIndex);
-        playDualStageIntro();
+        playDualStageIntro(); 
     }
 
     function startAdventure() {
         document.getElementById("welcomeStage").classList.add("fade-out"); 
         document.getElementById("mainGameContainer").style.display = "block";
         
+        // 進入遊戲，解鎖右側 Bar 供玩家延伸滾動
         document.documentElement.style.overflowY = "auto";
         document.body.style.overflowY = "auto";
     }
@@ -647,6 +709,7 @@
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
+        // 🔒 結局鎖死滾動條
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
@@ -660,6 +723,7 @@
         `;
         document.body.appendChild(endingDiv);
 
+        // 無限連續發射大煙火
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
         }, 300);
@@ -693,37 +757,33 @@
         }
     }
 
+    // 🔄 【核心機制優化】點擊再玩一次時，秒殺並直跳第二個選單畫面！
     function completelyResetGame() {
         if(fireworkTimer) clearInterval(fireworkTimer); 
+        if(petalInterval) clearInterval(petalInterval); // 確保摧毀計時器
         
         const endingView = document.getElementById("cleanEndingView");
         if (endingView) endingView.remove();
         
-        const wrapper = document.getElementById("introWrapper");
-        wrapper.innerHTML = ""; 
+        // 🛠️ 徹底拔除第一層物體動畫與落櫻舞台
+        const introStage = document.getElementById("introStage");
+        if (introStage) introStage.remove();
         
+        // 🚀 【直跳核心】直接為第二個畫面加入 reveal 樣式，跳過等待，直達選單頁！
         const welcomeStage = document.getElementById("welcomeStage");
         if (welcomeStage) {
-            welcomeStage.classList.remove("reveal-menu");
             welcomeStage.classList.remove("fade-out");
+            welcomeStage.classList.add("reveal-menu");
         }
-        
-        // 🛠️ 重建一個乾淨的新開場階段，強制瀏覽器百分之百重播兩段縮放
-        const newStage = document.createElement("div");
-        newStage.className = "intro-blackout";
-        newStage.id = "introStage";
-        newStage.innerHTML = `<div class="intro-object">🌟</div>`;
-        wrapper.appendChild(newStage);
         
         document.getElementById("mainGameContainer").style.display = "none";
         
+        // 🔒 選單層依然保持無 Bar 的滿版狀態
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
         
         completedLevels.clear();
         loadLevel(0);
-        
-        playDualStageIntro();
     }
 
     window.onload = initGame;
