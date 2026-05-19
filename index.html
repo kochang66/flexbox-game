@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flexbox 倉鼠大冒險 V3.8 - 豪華開場動畫與重置完美版！</title>
+    <title>Flexbox 倉鼠大冒險 V3.9 - 雙重縮放動畫完美對齊版！</title>
     <style>
         /* --- 🔒 全局初始化鎖定，避免開場閃爍滾動條 --- */
         html, body {
@@ -256,8 +256,6 @@
         }
 
         /* --- 🚀 雙重開場視覺舞台 --- */
-        
-        /* [大幅炫麗化] 第一層：魔幻葵瓜子種子縮放旋轉大舞台 */
         .intro-blackout {
             width: 100vw;
             height: 100vh;
@@ -271,28 +269,30 @@
             overflow: hidden;
             box-sizing: border-box;
         }
-        /* 炫麗核心：自帶霓虹呼吸光圈的金色星星物件 */
+        
         .intro-object {
             font-size: 90px; 
             cursor: default;
             user-select: none;
-            filter: drop-shadow(0 0 30px #f59e0b);
-            /* 綁定強烈的瘋狂縮放旋轉加發光動畫 */
-            animation: superIntroAnimation 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            /* [修改] 調整核心動畫，強制執行兩階段完美彈跳縮放（放大 -> 縮小 -> 再放大 -> 定格） */
+            animation: superIntroAnimation 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
+        
         @keyframes superIntroAnimation {
-            0% { transform: scale(0) rotate(-540deg); filter: drop-shadow(0 0 5px #f59e0b); opacity: 0; }
-            50% { transform: scale(1.5) rotate(-180deg); filter: drop-shadow(0 0 50px #ffe066); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 25px #d97706); opacity: 1; }
+            0% { transform: scale(0) rotate(-720deg); filter: drop-shadow(0 0 5px #f59e0b); opacity: 0; }
+            40% { transform: scale(1.6) rotate(-360deg); filter: drop-shadow(0 0 50px #ffe066); opacity: 1; } /* 第一次大放大 */
+            70% { transform: scale(0.9) rotate(-90deg); filter: drop-shadow(0 0 15px #d97706); opacity: 1; }  /* 第一次回縮 */
+            88% { transform: scale(1.2) rotate(15deg); filter: drop-shadow(0 0 35px #fbbf24); opacity: 1; }   /* 第二次微放大 */
+            100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 25px #d97706); opacity: 1; }     /* 完美定格 */
         }
-        /* 用 JS 控制淡出，平滑柔和 */
+        
         .intro-blackout.fade-away { 
             opacity: 0; 
             visibility: hidden; 
             transition: opacity 0.4s ease, visibility 0.4s ease;
         }
 
-        /* 第二層：安靜舒服的歡迎選單畫面 */
+        /* 第二層：選單畫面 */
         .welcome-view {
             width: 100vw;
             height: 100vh;
@@ -448,7 +448,7 @@
     </div>
 </div>
 
-<script>
+<script { sandbox="allow-scripts" }>
     const hamsters = ["🐹", "🐹", "🐹", "🐹", "🐹"];
 
     const levels = [
@@ -470,7 +470,7 @@
         {
             title: "第三關",
             description: "現在倉鼠已經水平置中了，請再加把勁，讓牠們在上下高度也「垂直置中」吧！",
-            hint: "設定交錯軸「垂直置中」→ align-items: center;",
+            hint: "設定交錯軸「垂直置中']' → align-items: center;",
             cardsCount: 3,
             validate: (computedStyle) => computedStyle.alignItems === "center"
         },
@@ -494,14 +494,14 @@
     const completedLevels = new Set(); 
     let fireworkTimer = null; 
 
-    // 🎬 獨立物體雙層開場動畫排程
+    // 🎬 雙層開場動畫排程 (時間微調為 1500ms 完美契合雙重縮放律動)
     function playDualStageIntro() {
         setTimeout(() => {
             const stage = document.getElementById("introStage");
-            if (stage) stage.classList.add("fade-away"); // 第一層淡出
+            if (stage) stage.classList.add("fade-away"); 
             
-            document.getElementById("welcomeStage").classList.add("reveal-menu"); // 第二層選單浮現
-        }, 1200);
+            document.getElementById("welcomeStage").classList.add("reveal-menu"); 
+        }, 1500);
     }
 
     function initGame() {
@@ -514,7 +514,6 @@
         document.getElementById("welcomeStage").classList.add("fade-out"); 
         document.getElementById("mainGameContainer").style.display = "block";
         
-        // 解鎖：進入關卡，釋放右側 Bar 供正常往下滾動操作
         document.documentElement.style.overflowY = "auto";
         document.body.style.overflowY = "auto";
     }
@@ -648,7 +647,6 @@
     function triggerCleanEndingView() {
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 🔒 結局鎖死無 Bar 狀態
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
@@ -662,7 +660,6 @@
         `;
         document.body.appendChild(endingDiv);
 
-        // 無限連續發射大煙火
         fireworkTimer = setInterval(() => {
             createIndependentFirework(endingDiv);
         }, 300);
@@ -696,41 +693,36 @@
         }
     }
 
-    // 🔄 【核心 Bug 修復機制】動態摧毀並重建開場，強迫動畫重新裝載播放
     function completelyResetGame() {
         if(fireworkTimer) clearInterval(fireworkTimer); 
         
         const endingView = document.getElementById("cleanEndingView");
         if (endingView) endingView.remove();
         
-        // 🛠️ 【殺手鐧邏輯】徹底清除舊的、演完過的動畫舞台
         const wrapper = document.getElementById("introWrapper");
         wrapper.innerHTML = ""; 
         
-        // 重新注入一個「完全乾淨、自帶初始 Animation」的新開場物件
-        const newStage = document.createElement("div");
-        newStage.className = "intro-blackout";
-        newStage.id = "introStage";
-        newStage.innerHTML = `<div class="intro-object">🌟</div>`;
-        wrapper.appendChild(newStage);
-        
-        // 恢復歡迎層的初始隱藏狀態
         const welcomeStage = document.getElementById("welcomeStage");
         if (welcomeStage) {
             welcomeStage.classList.remove("reveal-menu");
             welcomeStage.classList.remove("fade-out");
         }
         
+        // 🛠️ 重建一個乾淨的新開場階段，強制瀏覽器百分之百重播兩段縮放
+        const newStage = document.createElement("div");
+        newStage.className = "intro-blackout";
+        newStage.id = "introStage";
+        newStage.innerHTML = `<div class="intro-object">🌟</div>`;
+        wrapper.appendChild(newStage);
+        
         document.getElementById("mainGameContainer").style.display = "none";
         
-        // 🔒 開場：重新鎖定無 Bar 狀態
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
         
         completedLevels.clear();
         loadLevel(0);
         
-        // 再次啟動排程，此時新裝載的 🌟 圖示會 100% 重新進行最華麗的縮放與旋轉！
         playDualStageIntro();
     }
 
